@@ -2,18 +2,14 @@ import os
 import sys
 import dropbox
 from dropbox.exceptions import AuthError
+import pdb
 
 TOKEN = os.environ.get('DROPBOX_TOKEN')
-yFlag = False
 cFlag = False
-year = ''
-comp = ''
-keywords = []
-
+yFlag = False
 final_results = [[0, 0, 0]]
 
-
-def CheckAgainstKeywords(file):
+def CheckAgainstKeywords(file, keywords):
     file = file.lower()
     count = 0
     for i in keywords:
@@ -21,36 +17,6 @@ def CheckAgainstKeywords(file):
         if i in file:
             count += 1
     return count
-
-
-def ParseRawSearch(raw_search):
-    # -k keywords -y year -c company
-    delimited_search = raw_search.split("-")
-    for value in delimited_search:
-        # Apparently Python lacks a switch statement
-        # immpliments keywords, year, company
-        if value:
-            if value[0] == 'k':
-                split_keywords = value.split(" ")
-                for i in range(1, len(split_keywords)):
-                    keywords.append(split_keywords[i])
-            elif value[0] == 'c':
-                global comp
-                global cFlag
-                cFlag = True
-                comp = value[2:]
-                if comp[len(comp) - 1] == " ":
-                    comp = comp[0:len(comp) - 1]
-            elif value[0] == 'y':
-                global year
-                global yFlag
-                cFlag = True
-                year = value[2:]
-                if year[len(year) - 1] == " ":
-                    year = year[0:len(year) - 1]
-            else:
-                print("Bad format")
-
 
 def OrderAndDisplayResults(results):
     high_count = [0, 0, 0]
@@ -64,7 +30,12 @@ def OrderAndDisplayResults(results):
         OrderAndDisplayResults(results)
 
 
-if __name__ == '__main__':
+def search_dropbox(keywords, companies, years):
+    if(len(companies)>0):
+        cFlag = True
+    if(len(years)>0):
+        yFlag = True
+
     # Check for an access token
     if (len(TOKEN) == 0):
         sys.exit("No Access token")
@@ -79,12 +50,38 @@ if __name__ == '__main__':
         sys.exit("ERROR: Invalid access token; try re-generating an "
                  "access token from the app console on the web.")
 
-    raw_search = input("Enter a search string")
-    ParseRawSearch(raw_search)
-    results = [[0, 0, 0]]
 
-    for entry in dbx.files_list_folder('', True).entries:
-        print(entry)
+    if(yFlag == False) and (cFlag == False):
+        #searches recursively through the entire dropbox beginning at the root
+        for entry in dbx.files_list_folder('', True).entries:
+            if "." in entry.path_display:
+                print(entry.name)
+    
+    elif(yFlag == True) and (cFlag == False):
+        #searches through specific YEAR folders, but no specific companies
+        for yearEntry in dbx.files_list_folder('').entries:
+            if yearEntry.name in years:
+                for entry in dbx.files_list_folder(yearEntry.display_name, True).entries:
+                    print(entry.name)
+    
+    elif(yFlag == False) and (cFlag == True):
+        #searches through specific company folders, but any year
+        for yearEntry in dbx.files_list_folder('').entries:
+            for companyEntry in dbx.files_list_folder(yearEntry.display_name).entries:
+                if companyEntry.name in companies:
+                    for entry in dbx.files_list_folder(companyEntry.display_path).entries:
+                        print(entry.name)
+            
+    else:   #will need to search through only the years and companies specified by the user
+        #searches through the YEAR folders in the Dropbox
+        for yearEntry in dbx.files_list_folder('').entries:
+            if yearEntry.name in years:
+                for companyEntry in dbx.files_list_folder(yearEntry.path_display).entries:
+                    if companyEntry.name in companies:
+                        for entry in dbx.files_list_folder(companyEntry.path_display).entries:
+                            print(entry.name)
+
+        """
         if "." in entry.path_display:
             # Year is index 1, company is index 2, filename is index 3
             file_year = entry.path_display.split('/')[1]
@@ -102,9 +99,11 @@ if __name__ == '__main__':
                     file_flag = False
 
             if file_flag:
-                count = CheckAgainstKeywords(file_name)
+                count = CheckAgainstKeywords(file_name, keywords)
                 if count:
                     results.append([file_name, count, entry.path_display])
+        """
+
 
     OrderAndDisplayResults(results)
     for i in final_results:

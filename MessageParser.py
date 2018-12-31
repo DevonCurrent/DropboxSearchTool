@@ -52,5 +52,4 @@ def parse_message(slack_client, command, channel):
             channel=channel,
             text=response
         )
-        
-    
+        fileList = DropboxTool.search_dropbox(keywords, companies, years)

@@ -3,6 +3,8 @@ import sys
 import dropbox
 from dropbox.exceptions import AuthError
 import pdb
+import urllib3
+import certifi
 
 TOKEN = os.environ.get('DROPBOX_TOKEN')
 cFlag = False
@@ -31,6 +33,9 @@ def OrderAndDisplayResults(results):
 
 
 def search_dropbox(keywords, companies, years):
+    global yFlag
+    global cFlag
+
     if(len(companies)>0):
         cFlag = True
     if(len(years)>0):
@@ -50,19 +55,33 @@ def search_dropbox(keywords, companies, years):
         sys.exit("ERROR: Invalid access token; try re-generating an "
                  "access token from the app console on the web.")
 
+    results = [[0,0,0]]
 
     if(yFlag == False) and (cFlag == False):
         #searches recursively through the entire dropbox beginning at the root
         for entry in dbx.files_list_folder('', True).entries:
             if "." in entry.path_display:
-                print(entry.name)
+                urllib3.disable_warnings()
+                link = dbx.files_get_temporary_link(entry.path_display).link
+                http = urllib3.PoolManager(
+                    cert_reqs='CERT_REQUIRED', 
+                    ca_certs=certifi.where())
+                pdb.set_trace()
+                r = http.request('GET', link)
+                print(r.read())
+                
+                
+
     
     elif(yFlag == True) and (cFlag == False):
         #searches through specific YEAR folders, but no specific companies
         for yearEntry in dbx.files_list_folder('').entries:
             if yearEntry.name in years:
                 for entry in dbx.files_list_folder(yearEntry.display_name, True).entries:
+                    r = dbx.files_get_preview(entry.path_display)[1] #response object
+                    print(r.text.count("the"))
                     print(entry.name)
+                    pdb.set_trace()
     
     elif(yFlag == False) and (cFlag == True):
         #searches through specific company folders, but any year
@@ -70,7 +89,10 @@ def search_dropbox(keywords, companies, years):
             for companyEntry in dbx.files_list_folder(yearEntry.display_name).entries:
                 if companyEntry.name in companies:
                     for entry in dbx.files_list_folder(companyEntry.display_path).entries:
+                        r = dbx.files_get_preview(entry.path_display)[1] #response object
+                        print(r.text.count("the"))
                         print(entry.name)
+                        pdb.set_trace()
             
     else:   #will need to search through only the years and companies specified by the user
         #searches through the YEAR folders in the Dropbox
@@ -79,31 +101,10 @@ def search_dropbox(keywords, companies, years):
                 for companyEntry in dbx.files_list_folder(yearEntry.path_display).entries:
                     if companyEntry.name in companies:
                         for entry in dbx.files_list_folder(companyEntry.path_display).entries:
+                            r = dbx.files_get_preview(entry.path_display)[1] #response object
+                            print(r.text.count("the"))
                             print(entry.name)
-
-        """
-        if "." in entry.path_display:
-            # Year is index 1, company is index 2, filename is index 3
-            file_year = entry.path_display.split('/')[1]
-            file_comp = entry.path_display.split('/')[2]
-            file_name = entry.path_display.split('/')[3]
-
-            file_flag = True
-
-            if cFlag:
-                if file_comp != comp:
-                    file_flag = False
-
-            if yFlag:
-                if file_year != year:
-                    file_flag = False
-
-            if file_flag:
-                count = CheckAgainstKeywords(file_name, keywords)
-                if count:
-                    results.append([file_name, count, entry.path_display])
-        """
-
+                            pdb.set_trace()
 
     OrderAndDisplayResults(results)
     for i in final_results:

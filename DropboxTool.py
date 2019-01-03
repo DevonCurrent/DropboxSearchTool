@@ -3,8 +3,9 @@ import sys
 import dropbox
 from dropbox.exceptions import AuthError
 import pdb
-import urllib3
-import certifi
+from urllib.request import Request, urlopen
+import gzip
+from bs4 import BeautifulSoup
 
 TOKEN = os.environ.get('DROPBOX_TOKEN')
 cFlag = False
@@ -61,6 +62,44 @@ def search_dropbox(keywords, companies, years):
         #searches recursively through the entire dropbox beginning at the root
         for entry in dbx.files_list_folder('', True).entries:
             if "." in entry.path_display:
+
+                url = dbx.sharing_get_file_metadata(entry.path_display).preview_url
+                #url = dbx.sharing_create_shared_link(entry.path_display).url
+                html = urlopen(url).read()
+                pdb.set_trace()
+
+                soup = BeautifulSoup(html)
+                
+
+                # kill all script and style elements
+                for script in soup(["script", "style"]):
+                    script.extract()    # rip it out
+
+                # get text
+                text = soup.get_text()
+
+                # break into lines and remove leading and trailing space on each
+                lines = (line.strip() for line in text.splitlines())
+                # break multi-headlines into a line each
+                chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                # drop blank lines
+                text = '\n'.join(chunk for chunk in chunks if chunk)
+                
+                print(text)
+
+
+
+                # an attempt to get a temporary link and open it.
+                """
+                url = dbx.files_get_temporary_link(entry.path_display).link
+                req = Request(url)
+                pdb.set_trace()
+                html = gzip.decompress(urlopen(req).read()).decode('utf-8')
+                """
+                
+                
+                # an attempt to get a link to the file and then search the file's contents
+                """
                 urllib3.disable_warnings()
                 link = dbx.files_get_temporary_link(entry.path_display).link
                 http = urllib3.PoolManager(
@@ -69,6 +108,7 @@ def search_dropbox(keywords, companies, years):
                 pdb.set_trace()
                 r = http.request('GET', link)
                 print(r.read())
+                """
                 
                 
 

@@ -4,13 +4,40 @@ import dropbox
 from dropbox.exceptions import AuthError
 import pdb
 from urllib.request import Request, urlopen
-import gzip
-from bs4 import BeautifulSoup
+from pathlib import Path
+from flask import Flask, redirect, render_template, request, session, url_for
 
-TOKEN = os.environ.get('DROPBOX_TOKEN')
+APP_KEY = os.environ.get('APP_KEY')
+APP_SECRET = os.environ.get('APP_SECRET')
 cFlag = False
 yFlag = False
 final_results = [[0, 0, 0]]
+
+
+
+def authorize():
+    flow = dropbox.oauth.DropboxOAuth2FlowNoRedirect(APP_KEY, APP_SECRET)
+    authorize_url = flow.start()
+    print('1. Go to: ' + authorize_url)
+    print('2. Click "Allow" (you might have to log in first)')
+    print('3. Copy the authorization code.')
+
+    code = input("Enter the authorization code here: ").strip()
+    access_token = flow.finish(code).access_token
+    return access_token
+
+def login(token_save_path):
+    if os.path.exists(token_save_path):
+        with open(token_save_path) as token_file:
+            access_token = token_file.read()
+    else:
+        access_token = authorize()
+        with open(token_save_path, 'w') as token_file:
+            token_file.write(access_token)
+    return dropbox.Dropbox(access_token)
+
+
+
 
 def CheckAgainstKeywords(file, keywords):
     file = file.lower()
@@ -42,12 +69,8 @@ def search_dropbox(keywords, companies, years):
     if(len(years)>0):
         yFlag = True
 
-    # Check for an access token
-    if (len(TOKEN) == 0):
-        sys.exit("No Access token")
-
     # Create an instance of a Dropbox class, which can make requests to the API.
-    dbx = dropbox.Dropbox(TOKEN)
+    dbx = login('token.dat')
 
     # Check that the access token is valid
     try:
@@ -63,54 +86,12 @@ def search_dropbox(keywords, companies, years):
         for entry in dbx.files_list_folder('', True).entries:
             if "." in entry.path_display:
 
-                url = dbx.sharing_get_file_metadata(entry.path_display).preview_url
-                #url = dbx.sharing_create_shared_link(entry.path_display).url
-                html = urlopen(url).read()
+                resp = dbx.files_download(entry.path_display)[1]
+                content = resp.content
+                
                 pdb.set_trace()
+                content.decode('utf-8') # this should work but it is saying invalid continuation byte
 
-                soup = BeautifulSoup(html)
-                
-
-                # kill all script and style elements
-                for script in soup(["script", "style"]):
-                    script.extract()    # rip it out
-
-                # get text
-                text = soup.get_text()
-
-                # break into lines and remove leading and trailing space on each
-                lines = (line.strip() for line in text.splitlines())
-                # break multi-headlines into a line each
-                chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-                # drop blank lines
-                text = '\n'.join(chunk for chunk in chunks if chunk)
-                
-                print(text)
-
-
-
-                # an attempt to get a temporary link and open it.
-                """
-                url = dbx.files_get_temporary_link(entry.path_display).link
-                req = Request(url)
-                pdb.set_trace()
-                html = gzip.decompress(urlopen(req).read()).decode('utf-8')
-                """
-                
-                
-                # an attempt to get a link to the file and then search the file's contents
-                """
-                urllib3.disable_warnings()
-                link = dbx.files_get_temporary_link(entry.path_display).link
-                http = urllib3.PoolManager(
-                    cert_reqs='CERT_REQUIRED', 
-                    ca_certs=certifi.where())
-                pdb.set_trace()
-                r = http.request('GET', link)
-                print(r.read())
-                """
-                
-                
 
     
     elif(yFlag == True) and (cFlag == False):

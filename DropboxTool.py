@@ -78,7 +78,7 @@ def search_dropbox(keywords, companies, years):
         #searches through specific company folders, but any year
         for yearEntry in dbx.files_list_folder('').entries:
             for companyEntry in dbx.files_list_folder(yearEntry.display_name).entries:
-                if companyEntry.name in companies:
+                if companyEntry.name.lower() in companies:
                     for entry in dbx.files_list_folder(companyEntry.display_path).entries:
                         count = CheckAgainstKeywords(entry.name, keywords)
                         pdb.set_trace()
@@ -88,7 +88,7 @@ def search_dropbox(keywords, companies, years):
         for yearEntry in dbx.files_list_folder('').entries:
             if yearEntry.name in years:
                 for companyEntry in dbx.files_list_folder(yearEntry.path_display).entries:
-                    if companyEntry.name in companies:
+                    if companyEntry.name.lower() in companies:
                         for entry in dbx.files_list_folder(companyEntry.path_display).entries:
                             count = CheckAgainstKeywords(entry.name, keywords)
                             pdb.set_trace()

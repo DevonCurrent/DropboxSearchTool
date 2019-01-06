@@ -7,17 +7,16 @@ import pdb
 
 def setup_search(value, searchTerm):
     splitSearchTerms = value.split(" ")
+    splitSearchTerms = [term.lower() for term in splitSearchTerms]
     for i in range(1, len(splitSearchTerms)):
         searchTerm.append(splitSearchTerms[i])
     if '' in searchTerm:  # removes blank space at the end of a search
         searchTerm.remove('')
 
-
-def parse_message(slack_client, command, channel):
+def parse_message(slackClient, command, channel):
     """
         Executes bot command if the command is known
     """    
-
     # Sets all search terms to none for a new search
     keywords = []
     companies = []
@@ -42,7 +41,7 @@ def parse_message(slack_client, command, channel):
     if(keywords == []):
         response = "Not sure what you mean. Please make sure that you typed it correctly. Example: -k leadership -y 2014* -c Microsoft* where * is optional"
         # Sends the response back to the channel
-        slack_client.api_call(
+        slackClient.api_call(
             "chat.postMessage",
             channel=channel,
             text=response
@@ -51,7 +50,7 @@ def parse_message(slack_client, command, channel):
     else:
         response = "Ok! I will search for " + str(keywords).strip('[]') + " \nfrom " + str(companies).strip('[]') + " \nfrom the year(s) " + str(years).strip('[]')
         # Sends the response back to the channel
-        slack_client.api_call(
+        slackClient.api_call(
             "chat.postMessage",
             channel=channel,
             text=response

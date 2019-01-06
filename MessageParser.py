@@ -60,6 +60,8 @@ def parse_message(slackClient, command, channel):
         )
 
         if fileContentSearch:
-            print("Sorry! I do not have that functionality yet!")
+            print ("Sorry! I do not have that functionality yet!")
         else:
             return DropboxTool.search_dropbox(keywords, companies, years)
+    
+    return []

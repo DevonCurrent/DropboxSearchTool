@@ -2,7 +2,6 @@ import os
 import time
 import re
 import DropboxTool
-from slackclient import SlackClient
 import pdb
 
 def setup_search(value, searchTerm):
@@ -16,11 +15,13 @@ def setup_search(value, searchTerm):
 def parse_message(slackClient, command, channel):
     """
         Executes bot command if the command is known
-    """    
+    """
     # Sets all search terms to none for a new search
     keywords = []
     companies = []
     years = []
+
+    fileContentSearch = False
 
     # Finds and executes the given command, filling in response
     response = ""
@@ -28,7 +29,9 @@ def parse_message(slackClient, command, channel):
     delimited_search = command.split("-")
     for value in delimited_search:
         if value:
-            if value[0] == 'k':
+            if value[0] == 'f':
+                if value[1] == 'c':
+                    fileContentSearch = True
                 setup_search(value, keywords)
 
             elif value[0] == 'c':
@@ -55,4 +58,8 @@ def parse_message(slackClient, command, channel):
             channel=channel,
             text=response
         )
-        fileList = DropboxTool.search_dropbox(keywords, companies, years)
+
+        if fileContentSearch:
+            print("Sorry! I do not have that functionality yet!")
+        else:
+            return DropboxTool.search_dropbox(keywords, companies, years)

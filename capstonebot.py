@@ -6,7 +6,7 @@ from slackclient import SlackClient
 import pdb
 
 # instantiate Slack client
-slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+slackClient = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
 # starterbot's user ID in Slack: value is assigned after the bot starts up
 starterbot_id = None
 
@@ -37,15 +37,30 @@ def parse_direct_mention(message_text):
     return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
 
 if __name__ == "__main__":
-    if slack_client.rtm_connect(with_team_state=False):
+    if slackClient.rtm_connect(with_team_state=False):
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
-        starterbot_id = slack_client.api_call("auth.test")["user_id"]
+        starterbot_id = slackClient.api_call("auth.test")["user_id"]
         while True:
-            command, channel = parse_bot_commands(slack_client.rtm_read())
+            command, channel = parse_bot_commands(slackClient.rtm_read())
             if command:
-                MessageParser.parse_message(slack_client, command, channel)
+                urlList = MessageParser.parse_message(slackClient, command, channel)
+                
+                if urlList == 0:
+                    slackClient.api_call(
+                        "chat.postMessage",
+                        channel=channel,
+                        text="Sorry! I wasn't able to find anything related to that search."
+                    )
+                else:
+                    for url in urlList:
+                        slackClient.api_call(
+                            "chat.postMessage",
+                            channel=channel,
+                            text=url
+                        )
                 print("This search is done. Another search may now happen.")
+
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")

@@ -9,7 +9,6 @@ from pathlib import Path
 TOKEN = os.environ.get('DROPBOX_TOKEN')
 cFlag = False
 yFlag = False
-final_results = [[0, 0, 0]]
 
 def CheckAgainstKeywords(file, keywords):
     file = file.lower()
@@ -17,21 +16,28 @@ def CheckAgainstKeywords(file, keywords):
     for i in keywords:
         i = i.lower()
         if i in file:
-            print(i)
             count += 1
     return count
 
-def OrderAndDisplayResults(results):
-    high_count = [0, 0, 0]
-    for i in results:
-        if i[1] >= high_count[1]:
-            high_count = i
+def OrderAndDisplayResults(fileList):
+    # using quicksort to order the fileList based on the number of counts for the search
+    less = []
+    equal = []
+    greater = []
 
-    if high_count != [0, 0, 0]:
-        final_results.append(high_count)
-        results.remove(high_count)
-        OrderAndDisplayResults(results)
+    if len(fileList) > 1:
+        pivot = fileList[0][1]
+        for file in fileList:
+            if file[1] < pivot:
+                less.append(file)
+            if file[1] == pivot:
+                equal.append(file)
+            if file[1] > pivot:
+                greater.append(file)
+        return OrderAndDisplayResults(greater) + equal + OrderAndDisplayResults(less)
 
+    else:  
+        return fileList
 
 def search_dropbox(keywords, companies, years):
     global yFlag
@@ -56,15 +62,15 @@ def search_dropbox(keywords, companies, years):
         sys.exit("ERROR: Invalid access token; try re-generating an "
                  "access token from the app console on the web.")
 
-    results = [[0,0,0]]
+    fileList = []
 
     if(yFlag == False) and (cFlag == False):
         #searches recursively through the entire dropbox beginning at the root
         for entry in dbx.files_list_folder('', True).entries:
             if "." in entry.path_display:
                 count = CheckAgainstKeywords(entry.name, keywords)
-                pdb.set_trace()
-
+                if count != 0:
+                    fileList.append([entry, count])
     
     elif(yFlag == True) and (cFlag == False):
         #searches through specific YEAR folders, but no specific companies
@@ -72,7 +78,8 @@ def search_dropbox(keywords, companies, years):
             if yearEntry.name in years:
                 for entry in dbx.files_list_folder(yearEntry.display_name, True).entries:
                     count = CheckAgainstKeywords(entry.name, keywords)
-                    pdb.set_trace()
+                    if count != 0:
+                        fileList.append([entry, count])
     
     elif(yFlag == False) and (cFlag == True):
         #searches through specific company folders, but any year
@@ -81,7 +88,8 @@ def search_dropbox(keywords, companies, years):
                 if companyEntry.name.lower() in companies:
                     for entry in dbx.files_list_folder(companyEntry.display_path).entries:
                         count = CheckAgainstKeywords(entry.name, keywords)
-                        pdb.set_trace()
+                        if count != 0:
+                            fileList.append([entry, count])
             
     else:   #will need to search through only the years and companies specified by the user
         #searches through the YEAR folders in the Dropbox
@@ -91,9 +99,13 @@ def search_dropbox(keywords, companies, years):
                     if companyEntry.name.lower() in companies:
                         for entry in dbx.files_list_folder(companyEntry.path_display).entries:
                             count = CheckAgainstKeywords(entry.name, keywords)
-                            pdb.set_trace()
+                            if count != 0:
+                                fileList.append([entry, count])
 
-    OrderAndDisplayResults(results)
-    for i in final_results:
-        if i[1] != 0:
-            print(dbx.files_get_temporary_link(i[2]).link)
+    sortedFileList = OrderAndDisplayResults(fileList)
+    urlList = []
+    for file in sortedFileList:
+        path = file[0].path_display
+        urlList.append(dbx.sharing_create_shared_link(path).url)
+    
+    return urlList

@@ -45,8 +45,8 @@ if __name__ == "__main__":
             command, channel = parse_bot_commands(slackClient.rtm_read())
             if command:
                 urlList = MessageParser.parse_message(slackClient, command, channel)
-                
-                if urlList == 0:
+
+                if len(urlList) == 0:
                     slackClient.api_call(
                         "chat.postMessage",
                         channel=channel,

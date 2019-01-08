@@ -20,7 +20,6 @@ def parse_message(slackClient, command, channel):
     keywords = []
     companies = []
     years = []
-
     fileContentSearch = False
 
     # Finds and executes the given command, filling in response
@@ -42,13 +41,8 @@ def parse_message(slackClient, command, channel):
 
     #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
     if(keywords == []):
-        response = "Not sure what you mean. Please make sure that you typed it correctly. Example: -k leadership -y 2014* -c Microsoft* where * is optional"
-        # Sends the response back to the channel
-        slackClient.api_call(
-            "chat.postMessage",
-            channel=channel,
-            text=response
-        )
+        return ["Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"]
+
 
     else:
         response = "Ok! I will search for " + str(keywords).strip('[]') + " \nfrom " + str(companies).strip('[]') + " \nfrom the year(s) " + str(years).strip('[]')
@@ -60,8 +54,6 @@ def parse_message(slackClient, command, channel):
         )
 
         if fileContentSearch:
-            print ("Sorry! I do not have that functionality yet!")
+            return ["Sorry! I do not have that functionality yet!"]
         else:
             return DropboxTool.search_dropbox(keywords, companies, years)
-    
-    return []

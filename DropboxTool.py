@@ -56,7 +56,7 @@ def search_dropbox(keywords, companies, years):
     # Check that the access token is valid
     try:
         dbx.users_get_current_account()
-    except AuthError as err:
+    except:
         sys.exit("ERROR: Invalid access token; try re-generating an "
                  "access token from the app console on the web.")
 

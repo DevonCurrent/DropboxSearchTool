@@ -22,4 +22,17 @@ if __name__ == "__main__":
                 slack_bot.SendSlackMessage(error_message)
             else:
                 file_list = dropbox_bot.SearchDropbox(search)
-                print(file_list)
+
+                if len(file_list) < 1:
+                    no_results_message = Message("No results found", m.user, m.msg_id, m.channel)
+                    slack_bot.SendSlackMessage(no_results_message)
+                else:
+                    resp = str(len(file_list)) + " results found"
+                    results_message = Message(resp, m.user, m.msg_id, m.channel)
+                    slack_bot.SendSlackMessage(results_message)
+
+                    links = dropbox_bot.ReturnListOfLinks(file_list)
+
+                    for link in links:
+                        link_message = Message(link, m.user, m.msg_id, m.channel)
+                        slack_bot.SendSlackMessage(link_message)

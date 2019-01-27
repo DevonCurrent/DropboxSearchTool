@@ -21,8 +21,5 @@ if __name__ == "__main__":
                 error_message = Message(search, m.user, m.msg_id, m.channel)
                 slack_bot.SendSlackMessage(error_message)
             else:
-                
-
-
-                
-
+                file_list = dropbox_bot.SearchDropbox(search)
+                print(file_list)

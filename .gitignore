@@ -1,3 +1,4 @@
 .git/
+.txt/
 env/
-/TeamMeetings/*
+TeamMeetings/*

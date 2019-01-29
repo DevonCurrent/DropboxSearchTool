@@ -11,28 +11,28 @@ class Search:
         self.message = None
         self.message = m     
 
-    def addKeyword(self, value):
-        self.SplitSearchTerms(value, 'k')
+    def add_keywords(self, value):
+        self.split_search_terms(value, 'k')
 
-    def addCompanies(self, value):
-        self.SplitSearchTerms(value, 'c')
+    def add_companies(self, value):
+        self.split_search_terms(value, 'c')
 
-    def addYears(self, value):
-        self.SplitSearchTerms(value, 'y')
+    def add_years(self, value):
+        self.split_search_terms(value, 'y')
 
-    def createCorrectSearchResponse(self):
+    def create_correct_search_response(self):
         self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " from " + str(self.companies).strip('[]') + " from the year(s) " + str(self.years).strip('[]')
 
-    def SplitSearchTerms(self, value, letter):
-        splitSearchTerms = value.split(" ")
-        splitSearchTerms = [term.lower() for term in splitSearchTerms]
-        for i in range(1, len(splitSearchTerms)):
+    def split_search_terms(self, value, letter):
+        separated_keywords = value.split(" ")
+        separated_keywords = [term.lower() for term in separated_keywords]
+        for i in range(1, len(separated_keywords)):
             if letter is 'k':
-                self.keywords.append(splitSearchTerms[i])
+                self.keywords.append(separated_keywords[i])
             elif letter is 'c':
-                self.companies.append(splitSearchTerms[i])
+                self.companies.append(separated_keywords[i])
             elif letter is 'y':
-                self.years.append(splitSearchTerms[i])
+                self.years.append(separated_keywords[i])
 
         if letter is 'k':
                 if '' in self.keywords:  # removes blank space at the end of a search

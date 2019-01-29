@@ -10,14 +10,12 @@ def SearchThread(slack_bot, dropbox_bot, m):
     if error:
         error_message = Message(search, m.user, m.msg_id, m.channel)
         slack_bot.SendSlackMessage(error_message)
-        search.reset()
     else:
         file_list = dropbox_bot.SearchDropbox(search)
 
         if len(file_list) < 1:
             no_results_message = Message("No results found", m.user, m.msg_id, m.channel)
             slack_bot.SendSlackMessage(no_results_message)
-            search.reset()
         else:
             resp_1 = str(len(file_list)) + " results found"
             resp_2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
@@ -31,7 +29,6 @@ def SearchThread(slack_bot, dropbox_bot, m):
             for link in links:
                 link_message = Message(link, m.user, m.msg_id, m.channel)
                 slack_bot.SendSlackMessage(link_message)
-            search.reset()
 
 if __name__ == "__main__":
     

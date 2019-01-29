@@ -5,9 +5,7 @@ def ParseMessage(message):
 
     delimited_search = message.text.split("-")
 
-    search = Search()
-    #search.reset()
-    search.addMessage(message)
+    search = Search(message)
     
     for value in delimited_search:
         if value:

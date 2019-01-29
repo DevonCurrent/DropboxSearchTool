@@ -5,6 +5,7 @@ from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 from Message import Message
 from Search import Search
+from ParseMessage import ParseMessage
 
 class TestConnections(unittest.TestCase):
 
@@ -45,6 +46,44 @@ class TestSearch(unittest.TestCase):
         search_2.addKeyword(" This Should be Split")
         self.assertEqual(['this', 'should', 'be', 'split'], search_2.keywords)
         self.assertEqual(4, len(search_2.keywords))
+
+        search_1.addCompanies(" Amazon Google")
+        search_1.addYears(" 2016 2017 1994")
+
+        search_1.createCorrectSearchResponse()
+
+        print(search_1.response)
+    
+    def test_response_generation(self):
+        m = Message("This is a test", "N/A", "N/A", "N/A")
+        search = Search(m)
+
+        search.addKeyword(" Hello World")
+        search.addCompanies(" Amazon Google")
+        search.addYears(" 2016 2017 1994")
+
+        search.createCorrectSearchResponse()
+
+        goal_resp = "Ok! I will search for 'hello', 'world' from 'amazon', 'google' from the year(s) '2016', '2017', '1994'"
+
+        self.assertEqual(search.response, goal_resp)
+
+    def test_parse_message(self):
+        m_1 = Message("-fn ", "N/A", "N/A", "N/A")
+        m_2 = Message("-fc content ", "N/A", "N/A", "N/A")
+        m_3 = Message("-fn Education -c Google -y 2019", "N/A", "N/A", "N/A")
+
+        #Returning True means that the function realized there is an error
+        self.assertTrue(ParseMessage(m_1))
+        self.assertTrue(ParseMessage(m_2))
+
+        error, search = ParseMessage(m_3)
+
+        self.assertFalse(error)
+        self.assertEqual(search.companies, ['google'])
+        self.assertEqual(search.keywords, ['education'])
+        self.assertEqual(search.years, ['2019'])
+
 
 
 

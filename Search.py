@@ -21,7 +21,7 @@ class Search:
         self.SplitSearchTerms(value, 'y')
 
     def createCorrectSearchResponse(self):
-        self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " \nfrom " + str(self.companies).strip('[]') + " \nfrom the year(s) " + str(self.years).strip('[]')
+        self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " from " + str(self.companies).strip('[]') + " from the year(s) " + str(self.years).strip('[]')
 
     def SplitSearchTerms(self, value, letter):
         splitSearchTerms = value.split(" ")

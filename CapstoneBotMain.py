@@ -1,50 +1,50 @@
 from Message import Message
-from ParseMessage import ParseMessage
+from ParseMessage import parse_message
 from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 import threading
 
-def SearchThread(slack_bot, dropbox_bot, m):
-    error, search = ParseMessage(m)
+def search_thread(slackBot, dropboxBot, m):
+    error, search = parse_message(m)
 
     if error:
-        error_message = Message(search, m.user, m.msg_id, m.channel)
-        slack_bot.SendSlackMessage(error_message)
+        errorMessage = Message(search, m.user, m.msgID, m.channel)
+        slackBot.send_slack_message(errorMessage)
     else:
-        file_list = dropbox_bot.SearchDropbox(search)
+        fileList = dropboxBot.search_dropbox(search)
 
-        if len(file_list) < 1:
-            no_results_message = Message("No results found", m.user, m.msg_id, m.channel)
-            slack_bot.SendSlackMessage(no_results_message)
+        if len(fileList) < 1:
+            noResultsMessage = Message("No results found", m.user, m.msgID, m.channel)
+            slackBot.send_slack_message(noResultsMessage)
         else:
-            resp_1 = str(len(file_list)) + " results found"
-            resp_2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
-            results_message_1 = Message(resp_1, m.user, m.msg_id, m.channel)
-            slack_bot.SendSlackMessage(results_message_1)
-            results_message_2 = Message(resp_2, m.user, m.msg_id, m.channel)
-            slack_bot.SendSlackMessage(results_message_2)
+            resp1 = str(len(fileList)) + " results found"
+            resp2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
+            resultsMessage1 = Message(resp1, m.user, m.msgID, m.channel)
+            slackBot.send_slack_message(resultsMessage1)
+            resultsMessage2 = Message(resp2, m.user, m.msgID, m.channel)
+            slackBot.send_slack_message(resultsMessage2)
 
-            links = dropbox_bot.ReturnListOfLinks(file_list)
+            links = dropboxBot.return_list_of_links(fileList)
 
             for link in links:
-                link_message = Message(link, m.user, m.msg_id, m.channel)
-                slack_bot.SendSlackMessage(link_message)
+                linkMessage = Message(link, m.user, m.msgID, m.channel)
+                slackBot.send_slack_message(linkMessage)
 
 if __name__ == "__main__":
     
-    slack_token = input("Enter a valid Slack OAuth2 token: ")
-    dropbox_token = input("Enter a valid Dropbox OAuth2 token: ")
+    slackToken = input("Enter a valid Slack OAuth2 token: ")
+    dropboxToken = input("Enter a valid Dropbox OAuth2 token: ")
     
 
-    slack_bot = SlackBot(slack_token)
-    dropbox_bot = DropboxBot(dropbox_token)
+    slackBot = SlackBot(slackToken)
+    dropboxBot = DropboxBot(dropboxToken)
 
-    print("The program can now recieve search queries")
+    print("The program can now receive search queries")
 
     while True:
-        m = slack_bot.ListenForMessage()
+        m = slackBot.listen_for_message()
         
         if m is not None:
-            threading.Thread(target=SearchThread,
-                args=(slack_bot, dropbox_bot, m)).start()
+            threading.Thread(target=search_thread,
+                args=(slackBot, dropboxBot, m)).start()
             

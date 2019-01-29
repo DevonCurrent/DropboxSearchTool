@@ -14,13 +14,13 @@ class SlackBot:
         print("Connection established with Slack")
         self.id = self.slackClient.api_call("auth.test")["user_id"]      
 
-    def ListenForMessage(self):
+    def listen_for_message(self):
         for event in self.slackClient.rtm_read():
             if event["type"] == "message" and not "subtype" in event:
                 message = Message(event["text"], event["user"], event["client_msg_id"], event["channel"])
                 return message
 
-    def SendSlackMessage(self, message):
+    def send_slack_message(self, message):
         self.slackClient.api_call(
             "chat.postMessage",
             channel=message.channel,

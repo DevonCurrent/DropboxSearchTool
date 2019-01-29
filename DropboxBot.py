@@ -1,7 +1,7 @@
 import dropbox
 from dropbox.exceptions import AuthError
 
-def CheckAgainstKeywords(file, keywords):
+def check_against_keywords(file, keywords):
     file = file.lower()
     count = 0
     for i in keywords:
@@ -25,7 +25,7 @@ class DropboxBot:
         
         print("Connection established with Dropbox")
 
-    def SearchDropbox(self, search):
+    def search_dropbox(self, search):
     
         cFlag = False
         yFlag = False
@@ -35,24 +35,24 @@ class DropboxBot:
         if(len(search.years)>0):
             yFlag = True
 
-        file_list = []
+        fileList = []
 
         if(yFlag == False) and (cFlag == False):
             #searches recursively through the entire dropbox beginning at the root
             for entry in self.dbx.files_list_folder('', True).entries:
                 if "." in entry.path_display:
-                    count = CheckAgainstKeywords(entry.name, search.keywords)
+                    count = check_against_keywords(entry.name, search.keywords)
                     if count != 0:
-                        file_list.append([entry, count])
+                        fileList.append([entry, count])
     
         elif(yFlag == True) and (cFlag == False):
             #searches through specific YEAR folders, but no specific companies
             for yearEntry in self.dbx.files_list_folder('').entries:
                 if yearEntry.name in search.years:
                     for entry in self.dbx.files_list_folder(yearEntry.path_display, True).entries:
-                        count = CheckAgainstKeywords(entry.name, search.keywords)
+                        count = check_against_keywords(entry.name, search.keywords)
                         if count != 0:
-                            file_list.append([entry, count])
+                            fileList.append([entry, count])
         
         elif(yFlag == False) and (cFlag == True):
             #searches through specific company folders, but any year
@@ -60,9 +60,9 @@ class DropboxBot:
                 for companyEntry in self.dbx.files_list_folder(yearEntry.path_display).entries:
                     if companyEntry.name.lower() in search.companies:
                         for entry in self.dbx.files_list_folder(companyEntry.path_display).entries:
-                            count = CheckAgainstKeywords(entry.name, search.keywords)
+                            count = check_against_keywords(entry.name, search.keywords)
                             if count != 0:
-                                file_list.append([entry, count])
+                                fileList.append([entry, count])
                 
         else:   #will need to search through only the years and companies specified by the user
             #searches through the YEAR folders in the Dropbox
@@ -71,23 +71,23 @@ class DropboxBot:
                     for companyEntry in self.dbx.files_list_folder(yearEntry.path_display).entries:
                         if companyEntry.name.lower() in search.companies:
                             for entry in self.dbx.files_list_folder(companyEntry.path_display).entries:
-                                count = CheckAgainstKeywords(entry.name, search.keywords)
+                                count = check_against_keywords(entry.name, search.keywords)
                                 if count != 0:
-                                    file_list.append([entry, count])
+                                    fileList.append([entry, count])
 
 
-        def getkey(item):
+        def get_key(item):
             return item[1]
 
-        sorted(file_list, key = getkey)
+        sorted(fileList, key = get_key)
         #sorted sorts from low to high, we want high to low
-        file_list.reverse()
+        fileList.reverse()
 
-        return file_list
+        return fileList
 
-    def ReturnListOfLinks(self, file_list):
+    def return_list_of_links(self, fileList):
         links = []
-        for file in file_list:
+        for file in fileList:
             path = file[0].path_display
             links.append(self.dbx.sharing_create_shared_link(path).url)
         

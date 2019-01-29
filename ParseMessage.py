@@ -4,7 +4,10 @@ from Search import Search
 def ParseMessage(message):
 
     delimited_search = message.text.split("-")
-    search = Search(message)
+
+    search = Search()
+    #search.reset()
+    search.addMessage(message)
     
     for value in delimited_search:
         if value:

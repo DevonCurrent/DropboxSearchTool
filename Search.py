@@ -1,13 +1,15 @@
 from Message import Message
 
 class Search:
-    response = ""
-    keywords = []
-    companies = []
-    years = []
-    fileContentSearch = False
 
-    def __init__(self, m):
+    def __init__(self):
+        self.response = ""
+        self.keywords = []
+        self.companies = []
+        self.years = []
+        self.fileContentSearch = False
+
+    def addMessage(self, m):
         self.message = m
 
     def addKeyword(self, value):
@@ -36,3 +38,10 @@ class Search:
 
     def createCorrectSearchResponse(self):
         self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " \nfrom " + str(self.companies).strip('[]') + " \nfrom the year(s) " + str(self.years).strip('[]')
+
+    def reset(self):
+        self.response = ""
+        self.keywords = []
+        self.companies = []
+        self.years = []
+        self.fileContentSearch = False

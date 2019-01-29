@@ -5,7 +5,7 @@ from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 from Message import Message
 from Search import Search
-from parse_message import parse_message
+from ParseMessage import parse_message
 
 class TestConnections(unittest.TestCase):
 

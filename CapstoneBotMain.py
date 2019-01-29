@@ -39,7 +39,7 @@ if __name__ == "__main__":
     slackBot = SlackBot(slackToken)
     dropboxBot = DropboxBot(dropboxToken)
 
-    print("The program can now recieve search queries")
+    print("The program can now receive search queries")
 
     while True:
         m = slackBot.listen_for_message()

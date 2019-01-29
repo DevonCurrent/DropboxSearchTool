@@ -80,6 +80,8 @@ class DropboxBot:
             return item[1]
 
         sorted(file_list, key = getkey)
+        #sorted sorts from low to high, we want high to low
+        file_list.reverse()
 
         return file_list
 

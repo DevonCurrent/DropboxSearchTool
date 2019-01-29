@@ -84,6 +84,23 @@ class TestSearch(unittest.TestCase):
         self.assertEqual(search.keywords, ['education'])
         self.assertEqual(search.years, ['2019'])
 
+    #Test will only work if it is supplied the correct Dropbox account
+    def test_dropbox_bot(self):
+        dropbox_bot = DropboxBot(dropbox_token)
+
+        m = Message("-fn More -c Amazon -y 2017", "N/A", "N/A", "N/A")
+        
+        error, s = ParseMessage(m)
+
+        if not error:
+            s_list = dropbox_bot.SearchDropbox(s)
+            self.assertEqual(3, len(s_list))
+            
+            #Checks that the files were returned in the correct order, highest to smallest
+            count = 3
+            for file in s_list:
+                self.assertEqual(count,file[0].name.count('More'))
+                count -= 1
 
 
 

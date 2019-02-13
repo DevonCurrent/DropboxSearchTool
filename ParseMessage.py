@@ -20,6 +20,9 @@ def parse_message(message):
             elif value[0] == 'y':
                 search.add_years(value)
 
+            elif value[0] == 'h':
+                return True, "To search for files use the following commands: \n -fn for a file's name. \n -c for the company the file was made for. \n  -y for the year the file was created \n -ft for the file type."
+
     #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
     if(search.keywords == []):
         return True, "Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"

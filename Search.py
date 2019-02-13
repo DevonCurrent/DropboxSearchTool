@@ -2,14 +2,12 @@ from Message import Message
 
 class Search:
 
-    def __init__(self, m):
+    def __init__(self):
         self.response = ""
         self.keywords = []
         self.companies = []
         self.years = []
         self.fileContentSearch = False
-        self.message = None
-        self.message = m     
 
     def add_keywords(self, value):
         self.split_search_terms(value, 'k')

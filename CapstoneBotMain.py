@@ -6,25 +6,25 @@ import threading
 
 def search_thread(slackBot, dropboxBot, m):
     error, search = parse_message(m)
-
+    
     if error:
         errorMessage = Message(search, m.user, m.msgID, m.channel)
         slackBot.send_slack_message(errorMessage)
     else:
-        fileList = dropboxBot.search_dropbox(search)
+        bestDocFileList = dropboxBot.search_dropbox(search)
 
-        if len(fileList) < 1:
+        if len(bestDocFileList) < 1:
             noResultsMessage = Message("No results found", m.user, m.msgID, m.channel)
             slackBot.send_slack_message(noResultsMessage)
         else:
-            resp1 = str(len(fileList)) + " results found"
+            resp1 = str(len(bestDocFileList)) + " results found"
             resp2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
             resultsMessage1 = Message(resp1, m.user, m.msgID, m.channel)
             slackBot.send_slack_message(resultsMessage1)
             resultsMessage2 = Message(resp2, m.user, m.msgID, m.channel)
             slackBot.send_slack_message(resultsMessage2)
 
-            links = dropboxBot.return_list_of_links(fileList)
+            links = dropboxBot.return_list_of_links(bestDocFileList)
 
             for link in links:
                 linkMessage = Message(link, m.user, m.msgID, m.channel)

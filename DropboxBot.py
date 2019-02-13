@@ -1,14 +1,7 @@
 import dropbox
 from dropbox.exceptions import AuthError
-
-def check_against_keywords(file, keywords):
-    file = file.lower()
-    count = 0
-    for i in keywords:
-        i = i.lower()
-        if i in file:
-            count += 1
-    return count
+from BagOfWords import BagOfWords
+import pdb
     
 class DropboxBot:
 
@@ -41,18 +34,14 @@ class DropboxBot:
             #searches recursively through the entire dropbox beginning at the root
             for entry in self.dbx.files_list_folder('', True).entries:
                 if "." in entry.path_display:
-                    count = check_against_keywords(entry.name, search.keywords)
-                    if count != 0:
-                        fileList.append([entry, count])
+                    fileList.append(entry)
     
         elif(yFlag == True) and (cFlag == False):
             #searches through specific YEAR folders, but no specific companies
             for yearEntry in self.dbx.files_list_folder('').entries:
                 if yearEntry.name in search.years:
                     for entry in self.dbx.files_list_folder(yearEntry.path_display, True).entries:
-                        count = check_against_keywords(entry.name, search.keywords)
-                        if count != 0:
-                            fileList.append([entry, count])
+                        fileList.append(entry)
         
         elif(yFlag == False) and (cFlag == True):
             #searches through specific company folders, but any year
@@ -60,9 +49,8 @@ class DropboxBot:
                 for companyEntry in self.dbx.files_list_folder(yearEntry.path_display).entries:
                     if companyEntry.name.lower() in search.companies:
                         for entry in self.dbx.files_list_folder(companyEntry.path_display).entries:
-                            count = check_against_keywords(entry.name, search.keywords)
-                            if count != 0:
-                                fileList.append([entry, count])
+                            fileList.append(entry)
+                            
                 
         else:   #will need to search through only the years and companies specified by the user
             #searches through the YEAR folders in the Dropbox
@@ -71,24 +59,17 @@ class DropboxBot:
                     for companyEntry in self.dbx.files_list_folder(yearEntry.path_display).entries:
                         if companyEntry.name.lower() in search.companies:
                             for entry in self.dbx.files_list_folder(companyEntry.path_display).entries:
-                                count = check_against_keywords(entry.name, search.keywords)
-                                if count != 0:
-                                    fileList.append([entry, count])
+                                fileList.append(entry)
+
+        keywords = ' '.join(search.keywords)
+
+        return BagOfWords(fileList, keywords).find_accurate_docs()
 
 
-        def get_key(item):
-            return item[1]
-
-        sorted(fileList, key = get_key)
-        #sorted sorts from low to high, we want high to low
-        fileList.reverse()
-
-        return fileList
-
-    def return_list_of_links(self, fileList):
+    def return_list_of_links(self, bestDocFileList):
         links = []
-        for file in fileList:
-            path = file[0].path_display
+        for file in bestDocFileList:
+            path = file.path_display
             links.append(self.dbx.sharing_create_shared_link(path).url)
         
         return links

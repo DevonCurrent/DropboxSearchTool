@@ -97,10 +97,10 @@ class TestSearch(unittest.TestCase):
             self.assertEqual(3, len(searchList))
             
             #Checks that the files were returned in the correct order, highest to smallest
-            count = 3
+            weight = 3
             for file in searchList:
-                self.assertEqual(count,file[0].name.count('More'))
-                count -= 1
+                self.assertEqual(weight,file[0].name.weight('More'))
+                weight -= 1
 
 
 

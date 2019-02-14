@@ -6,6 +6,7 @@ import threading
 from tkinter import filedialog
 
 
+
 def search_thread(slackBot, dropboxBot, m):
     error, search = parse_message(m)
     
@@ -38,9 +39,7 @@ if __name__ == "__main__":
     tokenFile = open(file)
     lines = tokenFile.read().splitlines()
     slackToken = lines[0]
-    print(slackToken)
     dropboxToken = lines[1]
-    print(dropboxToken)
 
     slackBot = SlackBot(slackToken)
     dropboxBot = DropboxBot(dropboxToken)
@@ -49,7 +48,7 @@ if __name__ == "__main__":
 
     while True:
         m = slackBot.listen_for_message()
-        
+      
         if m is not None:
             threading.Thread(target=search_thread,
                 args=(slackBot, dropboxBot, m)).start()

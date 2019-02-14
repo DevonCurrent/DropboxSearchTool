@@ -3,6 +3,8 @@ from ParseMessage import parse_message
 from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 import threading
+from tkinter import filedialog
+
 
 def search_thread(slackBot, dropboxBot, m):
     error, search = parse_message(m)
@@ -32,9 +34,13 @@ def search_thread(slackBot, dropboxBot, m):
 
 if __name__ == "__main__":
     
-    slackToken = input("Enter a valid Slack OAuth2 token: ")
-    dropboxToken = input("Enter a valid Dropbox OAuth2 token: ")
-    
+    file = filedialog.askopenfilename()
+    tokenFile = open(file)
+    lines = tokenFile.read().splitlines()
+    slackToken = lines[0]
+    print(slackToken)
+    dropboxToken = lines[1]
+    print(dropboxToken)
 
     slackBot = SlackBot(slackToken)
     dropboxBot = DropboxBot(dropboxToken)

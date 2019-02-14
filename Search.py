@@ -7,6 +7,7 @@ class Search:
         self.keywords = []
         self.companies = []
         self.years = []
+        self.type = []
         self.fileContentSearch = False
 
     def add_keywords(self, value):
@@ -18,8 +19,11 @@ class Search:
     def add_years(self, value):
         self.split_search_terms(value, 'y')
 
+    def add_type(self, value):
+        self.split_search_terms(value, 't')
+
     def create_correct_search_response(self):
-        self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " from " + str(self.companies).strip('[]') + " from the year(s) " + str(self.years).strip('[]')
+        self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " from " + str(self.companies).strip('[]') + " from the year(s) " + str(self.years).strip('[]')  + " with the file type " + str(self.type).strip('[]')
 
     def split_search_terms(self, value, letter):
         separated_keywords = value.split(" ")
@@ -31,6 +35,8 @@ class Search:
                 self.companies.append(separated_keywords[i])
             elif letter is 'y':
                 self.years.append(separated_keywords[i])
+            elif letter is 't':
+                self.type.append(separated_keywords[i])
 
         if letter is 'k':
                 if '' in self.keywords:  # removes blank space at the end of a search
@@ -41,4 +47,7 @@ class Search:
         elif letter is 'y':
                 if '' in self.years:  # removes blank space at the end of a search
                     self.years.remove('')
+        elif letter is 't':
+                if '' in self.type:  # removes blank space at the end of a search
+                    self.type.remove('')
 

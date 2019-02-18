@@ -5,7 +5,7 @@ from DropboxBot import DropboxBot
 import threading
 
 def search_thread(slackBot, dropboxBot, m):
-    error, search = parse_message(m)
+    error, search = parse_message(dropboxBot, m)
     
     if error:
         errorMessage = Message(search, m.user, m.msgID, m.channel)

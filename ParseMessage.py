@@ -1,7 +1,8 @@
 from Message import Message
 from Search import Search
+from DropboxBot import DropboxBot
 
-def parse_message(message):
+def parse_message(dropboxBot, message):
 
     delimitedSearch = message.text.split("-")
     search = Search()
@@ -21,6 +22,9 @@ def parse_message(message):
 
             elif value[0] == 'h':
                 return True, "To search for files use the following commands: \n -fn for a file's name. \n -c for the company the file was made for. \n  -y for the year the file was created \n -ft for the file type."
+            
+            elif value[0] == 'r':
+                return True, DropboxBot.recent_search(dropboxBot)
 
     #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
     if(search.keywords == []):

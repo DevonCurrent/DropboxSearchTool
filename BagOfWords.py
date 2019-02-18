@@ -22,14 +22,14 @@ class BagOfWords:
         numSamples, numFeatures = trainVectors.shape
 
         # the keywords the session leader wants to find in Dropbox
-        keywords_vec = vectorizer.transform([self.keywords])
+        keywordsVec = vectorizer.transform([self.keywords])
 
         distList = []
         for i in range(0, numSamples):
             if fileNameList[i] == self.keywords:
                 continue
             fileNameList_vec = trainVectors.getrow(i)
-            d = self.dist_norm(fileNameList_vec, keywords_vec)   
+            d = self.dist_norm(fileNameList_vec, keywordsVec)   
             print("=== fileNameList %i with dist=%.2f: %s"%(i, d, fileNameList[i]))
             distList.append(d)
 

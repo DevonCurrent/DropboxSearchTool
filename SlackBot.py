@@ -12,7 +12,11 @@ class SlackBot:
             exit()
         
         print("Connection established with Slack")
-        self.id = self.slackClient.api_call("auth.test")["user_id"]      
+        self.id = self.slackClient.api_call("auth.test")["user_id"]
+        
+        #found where to put the greeting, not sure how to make it so the bot says it to the user
+        greeting="If you need to search for files start a direct message with me and use the following commands: \n -fn for a file's name. \n -c for the company the file was made for. \n  -y for the year the file was created \n -ft for the file type."
+        self.slackClient.api_call('chat.postMessage', channel='#general', text=greeting)
 
     def listen_for_message(self):
         for event in self.slackClient.rtm_read():

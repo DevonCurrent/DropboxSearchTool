@@ -12,6 +12,8 @@ def parse_message(dropboxBot, message):
             if value[0] == 'f':
                 if value[1] == 'c':
                     search.fileContentSearch = True
+                if value[1] == 't':
+                    search.add_type(value)
                 search.add_keywords(value)
 
             elif value[0] == 'c':

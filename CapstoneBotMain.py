@@ -3,6 +3,9 @@ from ParseMessage import parse_message
 from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 import threading
+from tkinter import filedialog
+
+
 
 def search_thread(slackBot, dropboxBot, m):
     error, search = parse_message(dropboxBot, m)
@@ -18,7 +21,7 @@ def search_thread(slackBot, dropboxBot, m):
             slackBot.send_slack_message(noResultsMessage)
         else:
             resp1 = str(len(bestDocFileList)) + " results found"
-            resp2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
+            resp2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')  + " \nwith the file type " + str(search.type).strip('[]')
             resultsMessage1 = Message(resp1, m.user, m.msgID, m.channel)
             slackBot.send_slack_message(resultsMessage1)
             resultsMessage2 = Message(resp2, m.user, m.msgID, m.channel)
@@ -32,9 +35,11 @@ def search_thread(slackBot, dropboxBot, m):
 
 if __name__ == "__main__":
     
-    slackToken = input("Enter a valid Slack OAuth2 token: ")
-    dropboxToken = input("Enter a valid Dropbox OAuth2 token: ")
-    
+    file = filedialog.askopenfilename()
+    tokenFile = open(file)
+    lines = tokenFile.read().splitlines()
+    slackToken = lines[0]
+    dropboxToken = lines[1]
 
     slackBot = SlackBot(slackToken)
     dropboxBot = DropboxBot(dropboxToken)
@@ -43,7 +48,7 @@ if __name__ == "__main__":
 
     while True:
         m = slackBot.listen_for_message()
-        
+      
         if m is not None:
             threading.Thread(target=search_thread,
                 args=(slackBot, dropboxBot, m)).start()

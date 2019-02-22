@@ -16,3 +16,11 @@ Discussed what we have accomplished since our last meeting.
  * Allison has the help message complete and is working on most recently edited files
  * Ryan is adding the full text search feature for file types
 Talked about next meeting with our client, which is was planned for 2/18 but has been moved to a TBD time due to a holiday.
+
+#February 22nd 2019
+### Bracken Libraary 3rd floor 2:00pm
+Discussed what we have accomplished since our last meeting.
+ * Devon has worked on recently edited file search and has improved the weighting system
+ * Allison is working on searching for specific file types
+ * Ryan has completed full text search and added tests
+ We talked about what we want to accomplish before our client meeting. Our client meeting is on February 25th 3pm.

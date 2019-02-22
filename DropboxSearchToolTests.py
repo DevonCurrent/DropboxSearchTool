@@ -51,8 +51,6 @@ class TestSearch(unittest.TestCase):
         search1.add_years(" 2016 2017 1994")
 
         search1.create_correct_search_response()
-
-        print(search1.response)
     
     def test_response_generation(self):
         m = Message("This is a test", "N/A", "N/A", "N/A")

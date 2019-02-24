@@ -2,6 +2,39 @@ from Message import Message
 from Search import Search
 from DropboxBot import DropboxBot
 
+"""
+Parses the message the slack user sent to the slack bot. 
+A Search object with search parameters is fed the parsed message data, to determine the type of search to do.
+
+"""
+
+def split_search_terms(search, value, letter):
+        separated_keywords = value.split(" ")
+        separated_keywords = [term.lower() for term in separated_keywords]
+        for i in range(1, len(separated_keywords)):
+            if letter is 'k':
+                search.keywords.append(separated_keywords[i])
+            elif letter is 'c':
+                search.companies.append(separated_keywords[i])
+            elif letter is 'y':
+                search.years.append(separated_keywords[i])
+            elif letter is 't':
+                search.type.append(separated_keywords[i])
+
+        if letter is 'k':
+                if '' in search.keywords:  # removes blank space at the end of a search
+                    search.keywords.remove('')
+        elif letter is 'c':
+                if '' in search.companies:  # removes blank space at the end of a search
+                    search.companies.remove('')
+        elif letter is 'y':
+                if '' in search.years:  # removes blank space at the end of a search
+                    search.years.remove('')
+        elif letter is 't':
+                if '' in search.type:  # removes blank space at the end of a search
+                    search.type.remove('')
+
+"""Returns a formatted Search object using the parsed data"""
 def parse_message(dropboxBot, message):
 
     delimitedSearch = message.text.split("-")
@@ -10,34 +43,25 @@ def parse_message(dropboxBot, message):
     for value in delimitedSearch:
         if value:
             if value[0] == 'f':
+                if value[1] == 'n':
+                    search.fileNameSearch = True
                 if value[1] == 'c':
                     search.fileContentSearch = True
                 if value[1] == 't':
-                    search.add_type(value)
-                search.add_keywords(value)
+                    split_search_terms(search, value, 't')
+                split_search_terms(search, value, 'k')
 
             elif value[0] == 'c':
-                search.add_companies(value)
+                split_search_terms(search, value, 'c')
 
             elif value[0] == 'y':
-                search.add_years(value)
+                split_search_terms(search, value, 'y')
 
             elif value[0] == 'h':
-                return True, "To search for files use the following commands: \n -fn for a file's name. \n -c for the company the file was made for. \n  -y for the year the file was created \n -ft for the file type."
-            
+                search.help = True
+
             elif value[0] == 'r':
-                return True, DropboxBot.recent_search(dropboxBot)
-
-    #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
-    if(search.keywords == []):
-        return True, "Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"
-    elif (search.fileContentSearch == True):
-        return True, "Sorry! I do not have that functionality yet!"
-
-    search.create_correct_search_response()
-
-    return False, search
-
-    
+                search.recentFileSearch = True
     
 
+    return search

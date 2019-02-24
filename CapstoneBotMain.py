@@ -5,29 +5,30 @@ from DropboxBot import DropboxBot
 import threading
 from tkinter import filedialog
 
-
-
 def search_thread(slackBot, dropboxBot, m):
-    error, search = parse_message(dropboxBot, m)
-    
-    if error:
-        errorMessage = Message(search, m.user, m.msgID, m.channel)
-        slackBot.send_slack_message(errorMessage)
-    else:
-        bestDocFileList = dropboxBot.search_dropbox(search)
 
-        if len(bestDocFileList) < 1:
+    search = parse_message(dropboxBot, m)
+    searchResult = search.dropbox_search(dropboxBot)
+
+    if(type(searchResult) == str):
+        resp = Message(searchResult, m.user, m.msgID, m.channel)
+        slackBot.send_slack_message(resp)
+
+    else:
+        # This should be sent after it is known that it is a search request and before the search request is done (maybe within Search?)
+        searchConfirm = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')  + " \nwith the file type " + str(search.type).strip('[]')
+        searchConfirmMsg = Message(searchConfirm, m.user, m.msgID, m.channel)
+        slackBot.send_slack_message(searchConfirmMsg)
+
+        if len(searchResult) < 1:
             noResultsMessage = Message("No results found", m.user, m.msgID, m.channel)
             slackBot.send_slack_message(noResultsMessage)
         else:
-            resp1 = str(len(bestDocFileList)) + " results found"
-            resp2 = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')  + " \nwith the file type " + str(search.type).strip('[]')
+            resp1 = str(len(searchResult)) + " results found"
             resultsMessage1 = Message(resp1, m.user, m.msgID, m.channel)
             slackBot.send_slack_message(resultsMessage1)
-            resultsMessage2 = Message(resp2, m.user, m.msgID, m.channel)
-            slackBot.send_slack_message(resultsMessage2)
-
-            links = dropboxBot.return_list_of_links(bestDocFileList)
+            
+            links = search.retrieve_hyperlink_list(dropboxBot, searchResult)
 
             for link in links:
                 linkMessage = Message(link, m.user, m.msgID, m.channel)

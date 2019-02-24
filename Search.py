@@ -1,4 +1,12 @@
-from Message import Message
+from FileNameSearch import FileNameSearch
+#from FileContentSearch import FileContentSearch
+from RecentFileSearch import RecentFileSearch
+
+"""
+Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
+Handles exceptions such as help (-h), incorrect searches, and having no keywords in a given search.
+
+"""
 
 class Search:
 
@@ -9,45 +17,35 @@ class Search:
         self.years = []
         self.type = []
         self.fileContentSearch = False
+        self.fileNameSearch = False
+        self.recentFileSearch = False
+        self.fileTypeSearch = False
+        self.help = False
 
-    def add_keywords(self, value):
-        self.split_search_terms(value, 'k')
+    def dropbox_search(self, dropboxBot):
 
-    def add_companies(self, value):
-        self.split_search_terms(value, 'c')
+        if(self.help):
+            return "To search for files use one of the following: \n -fn for a file's name. \n -ft for the file type. \n -fc for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created "
+        
+        elif(self.recentFileSearch):
+            return RecentFileSearch.recent_file_search(dropboxBot)
 
-    def add_years(self, value):
-        self.split_search_terms(value, 'y')
+        #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
+        elif(self.keywords == []):
+            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"
+        
+        elif(self.fileNameSearch):
+            return FileNameSearch.file_name_search(dropboxBot, self)
 
-    def add_type(self, value):
-        self.split_search_terms(value, 't')
+        elif(self.fileContentSearch):
+            return FileContentSearch.file_content_search(dropboxBot, self)
 
-    def create_correct_search_response(self):
-        self.response = "Ok! I will search for " + str(self.keywords).strip('[]') + " from " + str(self.companies).strip('[]') + " from the year(s) " + str(self.years).strip('[]')  + " with the file type " + str(self.type).strip('[]')
+    
 
-    def split_search_terms(self, value, letter):
-        separated_keywords = value.split(" ")
-        separated_keywords = [term.lower() for term in separated_keywords]
-        for i in range(1, len(separated_keywords)):
-            if letter is 'k':
-                self.keywords.append(separated_keywords[i])
-            elif letter is 'c':
-                self.companies.append(separated_keywords[i])
-            elif letter is 'y':
-                self.years.append(separated_keywords[i])
-            elif letter is 't':
-                self.type.append(separated_keywords[i])
-
-        if letter is 'k':
-                if '' in self.keywords:  # removes blank space at the end of a search
-                    self.keywords.remove('')
-        elif letter is 'c':
-                if '' in self.companies:  # removes blank space at the end of a search
-                    self.companies.remove('')
-        elif letter is 'y':
-                if '' in self.years:  # removes blank space at the end of a search
-                    self.years.remove('')
-        elif letter is 't':
-                if '' in self.type:  # removes blank space at the end of a search
-                    self.type.remove('')
-
+    def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):
+        links = []
+        for file in bestDocFileList:
+            path = file.path_display
+            links.append(dropboxBot.dbx.sharing_create_shared_link(path).url)
+        
+        return links

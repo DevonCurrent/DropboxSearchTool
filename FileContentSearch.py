@@ -1,9 +1,10 @@
 import tika
 from tika import parser
+from BagOfWords import BagOfWords
 
 from io import BytesIO
 
-class FullTextSearch:
+class FileContentSearch:
 
     def __init__(self):
         """
@@ -13,7 +14,7 @@ class FullTextSearch:
         """
         tika.initVM()
     
-    def to_be_searched(self, file, keywords):
+    def file_content_search(self, file, keywords):
         """
         Finds how many times keywords are used.
 

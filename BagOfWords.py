@@ -1,7 +1,6 @@
 from StemmedCountVectorizer import StemmedCountVectorizer
 import scipy as sp
 import sys
-import pdb
 
 class BagOfWords:
 
@@ -11,13 +10,12 @@ class BagOfWords:
         self.keywords = keywords
 
     def find_accurate_docs(self):
-
         fileNameList = []
         for entry in self.fileList:
             fileNameList.append(entry.name)
 
         #StemmedCountVectorizer creates a 2d array of word counts for each file            
-        vectorizer = StemmedCountVectorizer(min_df=1, stop_words='english') #can add "stop_words='english'" to remove common english words
+        vectorizer = StemmedCountVectorizer(min_df=1) #can add "stop_words='english'" to remove common english words
         trainVectors = vectorizer.fit_transform(fileNameList)
         numSamples, numFeatures = trainVectors.shape
 

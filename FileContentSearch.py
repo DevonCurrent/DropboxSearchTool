@@ -1,6 +1,8 @@
 import tika
 from tika import parser
 from BagOfWords import BagOfWords
+import pdb
+import dropbox
 
 from io import BytesIO
 
@@ -14,7 +16,7 @@ class FileContentSearch:
         """
         tika.initVM()
     
-    def file_content_search(self, file, keywords):
+    def file_content_search(dropboxBot, fileList, search):
         """
         Finds how many times keywords are used.
 
@@ -31,16 +33,27 @@ class FileContentSearch:
         -------
         dict
             A dictionary where each key is a keyword and the value contained is the number of times that keyword is used in the document.
-            
+
         """
-        stream = BytesIO(file.content)
-        parsed = parser.from_buffer(stream)
-        doc_string = parsed["content"].lower()
+        contentList = []
 
-        keyword_dict = {}
+        for files in fileList:
+            metadata, resp = dropboxBot.dbx.files_download(files.path_display)
 
-        for word in keywords:
-            count = doc_string.count(word.lower())
-            keyword_dict[word] = count
+            stream = BytesIO(resp.content)
+            parsed = parser.from_buffer(stream)
+            docString = parsed["content"].lower()
+            contentList.append(docString)
 
-        return keyword_dict
+        keywordDict = {}
+        """
+        for word in search.keywords:
+            count = docString.count(word.lower())
+            keywordDict[word] = count
+        pdb.set_trace()
+        return keywordDict
+        """
+        
+        keywords = ' '.join(search.keywords)
+
+        return BagOfWords.find_accurate_docs(fileList, contentList, keywords)

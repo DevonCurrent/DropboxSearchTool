@@ -1,6 +1,7 @@
 from FileNameSearch import FileNameSearch
-#from FileContentSearch import FileContentSearch
+from FileContentSearch import FileContentSearch
 from RecentFileSearch import RecentFileSearch
+from RelevantFileList import RelevantFileList
 
 """
 Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
@@ -35,10 +36,12 @@ class Search:
             return "Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"
         
         elif(self.fileNameSearch):
-            return FileNameSearch.file_name_search(dropboxBot, self)
+            fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
+            return FileNameSearch.file_name_search(fileList, self)
 
         elif(self.fileContentSearch):
-            return FileContentSearch.file_content_search(dropboxBot, self)
+            fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
+            return FileContentSearch.file_content_search(dropboxBot, fileList, self)
 
     
 

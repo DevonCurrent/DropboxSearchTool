@@ -46,13 +46,6 @@ class FileContentSearch:
             contentList.append(docString)
 
         keywordDict = {}
-        """
-        for word in search.keywords:
-            count = docString.count(word.lower())
-            keywordDict[word] = count
-        pdb.set_trace()
-        return keywordDict
-        """
         
         keywords = ' '.join(search.keywords)
 

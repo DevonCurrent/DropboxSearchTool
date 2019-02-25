@@ -3,7 +3,6 @@ from ParseMessage import parse_message
 from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 import threading
-from tkinter import filedialog
 
 def search_thread(slackBot, dropboxBot, m):
 
@@ -35,15 +34,9 @@ def search_thread(slackBot, dropboxBot, m):
                 slackBot.send_slack_message(linkMessage)
 
 if __name__ == "__main__":
-    
-    file = filedialog.askopenfilename()
-    tokenFile = open(file)
-    lines = tokenFile.read().splitlines()
-    slackToken = lines[0]
-    dropboxToken = lines[1]
 
-    slackBot = SlackBot(slackToken)
-    dropboxBot = DropboxBot(dropboxToken)
+    slackBot = SlackBot()
+    dropboxBot = DropboxBot()
 
     print("The program can now receive search queries")
 

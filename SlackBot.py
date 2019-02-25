@@ -3,9 +3,10 @@ from slackclient import SlackClient
 
 class SlackBot:
 
-    def __init__(self, token):
-        self.t = token
-        self.slackClient = SlackClient(self.t)
+    def __init__(self):
+        slackToken = open("DropboxSearchTokens.txt").readline().rstrip()
+
+        self.slackClient = SlackClient(slackToken)
 
         if not self.slackClient.rtm_connect(with_team_state=False):
             print("Connection could not be established")

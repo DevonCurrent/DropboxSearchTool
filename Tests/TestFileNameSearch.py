@@ -1,5 +1,9 @@
 import unittest
 import warnings
+import sys, os
+
+runPath = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(runPath, ".."))
 
 from SlackBot import SlackBot
 from DropboxBot import DropboxBot
@@ -11,11 +15,6 @@ class TestWeights(unittest.TestCase):
     
     def test_filename_weights_1(self):
         if __name__ == "__main__":
-            file = filedialog.askopenfilename()
-            tokens = open(file, "r")
-            lines = tokens.readlines()
-            slack = lines[0]
-            dropbox = lines[1]
 
             slackToken = slack
             dropboxToken = dropbox

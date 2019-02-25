@@ -12,7 +12,6 @@ Handles exceptions such as help (-h), incorrect searches, and having no keywords
 class Search:
 
     def __init__(self):
-        self.response = ""
         self.keywords = []
         self.companies = []
         self.years = []

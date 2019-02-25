@@ -1,20 +1,19 @@
 import unittest
 import warnings
+import tika
+from tika import parser
+import sys, os
+
+runPath = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(runPath, ".."))
 
 import dropbox
 from dropbox.exceptions import AuthError
 from io import BytesIO
-
-#from docx import Document
-#from pptx import Presentation
-
-import tika
-from tika import parser
-
-from FullTextSearch import FullTextSearch
+from FileContentSearch import FileContentSearch
 
 
-class TestExtraction(unittest.TestCase):
+class TestFileContentSearch(unittest.TestCase):
 
     t = ''
 
@@ -161,6 +160,10 @@ class TestExtraction(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    
+    slackBot = SlackBot()
+    dropboxBot = DropboxBot()
+    
     t = input("Enter Dropbox OAuth2 token For Test Account: ")
     tika.initVM()
     unittest.main()

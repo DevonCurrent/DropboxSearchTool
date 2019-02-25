@@ -1,11 +1,14 @@
 import dropbox
 from dropbox.exceptions import AuthError
-    
+
 class DropboxBot:
 
-    def __init__(self, t):
-        self.token = t
-        self.dbx = dropbox.Dropbox(t)
+    def __init__(self):
+        
+        lines = open("DropboxSearchTokens.txt").readlines()
+        dropboxToken = lines[1].strip()
+
+        self.dbx = dropbox.Dropbox(dropboxToken)
 
         try:
             self.dbx.users_get_current_account()

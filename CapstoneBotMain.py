@@ -20,7 +20,7 @@ def search_thread(slackBot, dropboxBot, m):
         searchConfirmMsg = Message(searchConfirm, m.user, m.msgID, m.channel)
         slackBot.send_slack_message(searchConfirmMsg)
 
-        if len(searchResult) < 1:
+        if (searchResult is None):
             noResultsMessage = Message("No results found", m.user, m.msgID, m.channel)
             slackBot.send_slack_message(noResultsMessage)
         else:

@@ -8,7 +8,7 @@ import threading
 def search_thread(slackBot, dropboxBot, m):
 
     search = parse_message(dropboxBot, m)
-    searchRe1sult = search.dropbox_search(dropboxBot)
+    searchResult = search.dropbox_search(dropboxBot)
 
     if(type(searchResult) == str):
         resp = Message(searchResult, m.user, m.msgID, m.channel)

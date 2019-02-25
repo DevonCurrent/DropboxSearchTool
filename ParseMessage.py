@@ -34,8 +34,26 @@ def split_search_terms(search, value, letter):
                 if '' in search.type:  # removes blank space at the end of a search
                     search.type.remove('')
 
-"""Returns a formatted Search object using the parsed data"""
+
 def parse_message(dropboxBot, message):
+
+    """
+    Parses a message to createa a Search object that can be used to determine the correct search algorithm
+    to find the appropriate file.
+
+    Parameters
+    ----------
+    dropboxBot : class 'DropboxBot.DropboxBot'
+        an instance of DropboxBot that has access to the Dropbox account
+    message : class 'Message.Message'
+        A Message object that stores the text, channel, and user so that the SlackBot can respond to the user.
+
+    Returns
+    -------
+    Search
+        A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
+        search algorithm, or return a message to the user.
+    """
 
     delimitedSearch = message.text.split("-")
     search = Search()

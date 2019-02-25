@@ -23,6 +23,22 @@ class Search:
         self.help = False
 
     def dropbox_search(self, dropboxBot):
+        """
+        A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
+        search algorithm, or return a message to the user.
+
+        Parameters
+        ----------
+        dropboxBot : class 'DropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+
+        Returns
+        -------
+        botResp
+            A string that can be formatted by the Slack bot to be sent back to the user for communication.
+        accurateDocList
+            A list of files requested by the Slack user that are the most accurate searches found on the Dropbox  
+        """
 
         if(self.help):
             return "To search for files use one of the following: \n -fn for a file's name. \n -ft for the file type. \n -fc for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created "

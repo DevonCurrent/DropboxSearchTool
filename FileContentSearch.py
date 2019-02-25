@@ -18,22 +18,22 @@ class FileContentSearch:
     
     def file_content_search(dropboxBot, fileList, search):
         """
-        Finds how many times keywords are used.
-
-        Uses Tika's python interface to parse a document, and then check all of the keywords against it.
+        Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
+        BagOfWords to find the most accurate searches.
 
         Parameters
         ----------
-        file : requests.models.Response
-            a dropbox file object returned by the dbx.files_download("path") call
-        keywords : tuple
-            tuple of keywords in the format ["k1", "k2",...]
+        dropboxBot : class 'DropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+        fileList : list
+            A list of files found on the Dropbox that are located in the specified companies and year fields.
+        search : class 'Search.Search'
+            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
 
         Returns
         -------
-        dict
-            A dictionary where each key is a keyword and the value contained is the number of times that keyword is used in the document.
-
+        accurateDocList
+            The list of files that are most accurate to the search that the Slack user requested.
         """
         contentList = []
 

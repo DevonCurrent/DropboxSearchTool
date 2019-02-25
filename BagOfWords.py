@@ -13,6 +13,26 @@ class BagOfWords:
         return sp.linalg.norm(delta.toarray())
 
     def find_accurate_docs(fileList, fileWordList, keywords):
+
+        """
+        An algorithm that vectorizes the fileList into a 2D array containing the number of instances used of each
+        keyword in each file. The Euclidean distance can then be measured to return the smallest distance (the most
+        accurate file). 
+
+        Parameters
+        ----------
+        fileList : list
+            A list of files found on the Dropbox that are located in the specified companies and year fields.
+        fileWordList : list
+            A list of strings. Each string is the full content of a file.
+        keywords : list
+            The keywords that the Slack user requests a file to contain
+
+        Returns
+        -------
+        bestDocs
+            The list of files that are most accurate to the search that the Slack user requested.
+        """
         
         RETURN_SIZE = 5
 

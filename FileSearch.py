@@ -46,6 +46,8 @@ class FileSearch:
             stream = BytesIO(resp.content)
             parsed = parser.from_buffer(stream)
             docString = parsed["content"].lower()
+            docString = docString + ' ' + files.name
+
             toBeSearchedList.append(docString)
         
         keywords = ' '.join(search.keywords)

@@ -19,7 +19,7 @@ class Search:
         self.fileTypeSearch = False
         self.help = False
 
-    def dropbox_search(self, dropboxBot):
+    def dropbox_search(self, dropboxBot, fileSearch):
         """
         A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
         search algorithm, or return a message to the user.
@@ -48,7 +48,7 @@ class Search:
             return "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional"
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
-        return FileSearch().file_search(dropboxBot, fileList, self)
+        return fileSearch.file_search(dropboxBot, fileList, self)
 
     
 

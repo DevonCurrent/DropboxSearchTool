@@ -12,8 +12,8 @@ class SlackBot:
             print("Connection could not be established")
             exit()
         
-        print("Connection established with Slack")
         self.id = self.slackClient.api_call("auth.test")["user_id"]
+        print("Connection established with Slack")
         
         #found where to put the greeting, not sure how to make it so the bot says it to the user
         greeting="If you need to search for files start a direct message with me and use the following commands: \n -fn for a file's name. \n -c for the company the file was made for. \n  -y for the year the file was created \n -ft for the file type."

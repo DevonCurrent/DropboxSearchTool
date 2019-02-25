@@ -1,5 +1,4 @@
-from FileNameSearch import FileNameSearch
-from FileContentSearch import FileContentSearch
+from FileSearch import FileSearch
 from RecentFileSearch import RecentFileSearch
 from RelevantFileList import RelevantFileList
 
@@ -16,8 +15,6 @@ class Search:
         self.companies = []
         self.years = []
         self.type = []
-        self.fileContentSearch = False
-        self.fileNameSearch = False
         self.recentFileSearch = False
         self.fileTypeSearch = False
         self.help = False
@@ -48,15 +45,10 @@ class Search:
 
         #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
         elif(self.keywords == []):
-            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"
+            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional"
         
-        elif(self.fileNameSearch):
-            fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
-            return FileNameSearch.file_name_search(fileList, self)
-
-        elif(self.fileContentSearch):
-            fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
-            return FileContentSearch.file_content_search(dropboxBot, fileList, self)
+        fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
+        return FileSearch().file_search(dropboxBot, fileList, self)
 
     
 

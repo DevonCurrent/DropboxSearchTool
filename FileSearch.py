@@ -6,7 +6,7 @@ import dropbox
 
 from io import BytesIO
 
-class FileContentSearch:
+class FileSearch:
 
     def __init__(self):
         """
@@ -16,7 +16,7 @@ class FileContentSearch:
         """
         tika.initVM()
     
-    def file_content_search(self, dropboxBot, fileList, search):
+    def file_search(self, dropboxBot, fileList, search):
         """
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
@@ -35,7 +35,7 @@ class FileContentSearch:
         accurateDocList
             The list of files that are most accurate to the search that the Slack user requested.
         """
-        contentList = []
+        toBeSearchedList = []
 
         for files in fileList:
             metadata, resp = dropboxBot.dbx.files_download(files.path_display)
@@ -46,8 +46,8 @@ class FileContentSearch:
             stream = BytesIO(resp.content)
             parsed = parser.from_buffer(stream)
             docString = parsed["content"].lower()
-            contentList.append(docString)
+            toBeSearchedList.append(docString)
         
         keywords = ' '.join(search.keywords)
 
-        return BagOfWords.find_accurate_docs(fileList, contentList, keywords)
+        return BagOfWords.find_accurate_docs(fileList, toBeSearchedList, keywords)

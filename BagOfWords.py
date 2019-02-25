@@ -50,15 +50,15 @@ class BagOfWords:
                 continue
             fileWordList_vec = trainVectors.getrow(i)
             d = BagOfWords.dist_norm(fileWordList_vec, keywordsVec)   
-            print("=== fileWordList %i with dist=%.2f: %s"%(i, d, fileWordList[i]))
+            #print("=== fileWordList %i with dist=%.2f: %s"%(i, d, fileWordList[i]))
             distList.append(d)
 
         bestDocs = []
         #selects only the files that have smallest distance
-        print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
+        #print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
         for i in range(0, RETURN_SIZE):
             doc = distList.index(min(distList))
-            print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
+            #print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
             bestDocs.append(fileList[doc])
             distList[doc] = sys.maxsize
         

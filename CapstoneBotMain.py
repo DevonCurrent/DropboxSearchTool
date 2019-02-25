@@ -8,7 +8,7 @@ import threading
 def search_thread(slackBot, dropboxBot, m):
 
     search = parse_message(dropboxBot, m)
-    searchResult = search.dropbox_search(dropboxBot)
+    searchRe1sult = search.dropbox_search(dropboxBot)
 
     if(type(searchResult) == str):
         resp = Message(searchResult, m.user, m.msgID, m.channel)
@@ -16,6 +16,7 @@ def search_thread(slackBot, dropboxBot, m):
 
     else:
         # This should be sent after it is known that it is a search request and before the search request is done (maybe within Search?)
+        # Should be formatted so that it only displays the chosen options
         searchConfirm = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')  + " \nwith the file type " + str(search.type).strip('[]')
         searchConfirmMsg = Message(searchConfirm, m.user, m.msgID, m.channel)
         slackBot.send_slack_message(searchConfirmMsg)

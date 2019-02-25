@@ -60,13 +60,7 @@ def parse_message(dropboxBot, message):
     
     for value in delimitedSearch:
         if value:
-            if value[0] == 'f':
-                if value[1] == 'n':
-                    search.fileNameSearch = True
-                if value[1] == 'c':
-                    search.fileContentSearch = True
-                if value[1] == 't':
-                    split_search_terms(search, value, 't')
+            if value[0] == 'k':
                 split_search_terms(search, value, 'k')
 
             elif value[0] == 'c':
@@ -80,6 +74,5 @@ def parse_message(dropboxBot, message):
 
             elif value[0] == 'r':
                 search.recentFileSearch = True
-    
 
     return search

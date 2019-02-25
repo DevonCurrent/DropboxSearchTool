@@ -7,19 +7,24 @@ import sys, os
 runPath = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(runPath, ".."))
 
+from DropboxBot import DropboxBot
+from Search import Search
+from RelevantFileList import RelevantFileList
+from BagOfWords import BagOfWords
 import dropbox
 from dropbox.exceptions import AuthError
 from io import BytesIO
-from FileContentSearch import FileContentSearch
+
+#from FileContentSearch import FileContentSearch
 
 
 class TestFileContentSearch(unittest.TestCase):
 
-    t = ''
+    dropbox_token = ''
 
     def test_docx(self):
         warnings.simplefilter("ignore", ResourceWarning)
-        dbx = dropbox.Dropbox(t)
+        dbx = dropbox.Dropbox(dropbox_token)
 
         try:
             dbx.users_get_current_account()
@@ -52,7 +57,7 @@ class TestFileContentSearch(unittest.TestCase):
     def test_pptx(self):
         warnings.simplefilter("ignore", ResourceWarning)
         
-        dbx = dropbox.Dropbox(t)
+        dbx = dropbox.Dropbox(dropbox_token)
 
         try:
             dbx.users_get_current_account()
@@ -91,7 +96,7 @@ class TestFileContentSearch(unittest.TestCase):
     def test_xlsx(self):
         warnings.simplefilter("ignore", ResourceWarning)
         
-        dbx = dropbox.Dropbox(t)
+        dbx = dropbox.Dropbox(dropbox_token)
 
         try:
             dbx.users_get_current_account()
@@ -114,7 +119,7 @@ class TestFileContentSearch(unittest.TestCase):
     def test_keyword(self):
         warnings.simplefilter("ignore", ResourceWarning)
         
-        dbx = dropbox.Dropbox(t)
+        dbx = dropbox.Dropbox(dropbox_token)
 
         try:
             dbx.users_get_current_account()
@@ -137,33 +142,47 @@ class TestFileContentSearch(unittest.TestCase):
 
     def test_full_text_search_object(self):
         warnings.simplefilter("ignore", ResourceWarning)
-        dbx = dropbox.Dropbox(t)
-        try:
-            dbx.users_get_current_account()
-        except AuthError as err:
-            print(err)
-            print("ERROR: Invalid access token; try re-generating an access token from the app console on the web.")
-            exit()
         
-        try:
-            metadata, file1 = dbx.files_download('/2014/Google/CapstoneExcelTest.xlsx')
-        except dropbox.files.DownloadError as err:
-            print(err)
-            exit()
+        dbx = DropboxBot()
 
-        search = FullTextSearch()
-        k_dict = search.to_be_searched(file1, ['Test','TRUE','False'])
+        search = Search()
+        search.keywords = ['Test', 'TRUE', 'False']
+        search.years = ['2014']
+        search.companies = ['google']
 
-        self.assertEqual(12, k_dict['Test'])
-        self.assertEqual(9, k_dict['TRUE'])
-        self.assertEqual(9, k_dict['False'])
+        fileList = RelevantFileList.retrieve_relevant_files(dbx, search)
+        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf']
 
+        list = []
+        
+        for file in fileList:
+            if any(fileType in file.name for fileType in searchableFileTypes):
+                metadata, resp = dbx.dbx.files_download(file.path_display)
+            
+                #Currently not using the metadata
+                del metadata
+
+                stream = BytesIO(resp.content)
+                parsed = parser.from_buffer(stream)
+                docString = parsed["content"].lower()
+
+                #Adds file name to doc string so that it is also searched
+                docString = docString + " " + file.name
+
+                list.append(docString)
+            else:
+                #Adds filenames to search instead of content
+                list.append(file.name)
+
+
+        keywords = ' '.join(search.keywords)
+
+        results = BagOfWords.find_accurate_docs(fileList, list, keywords)
+
+        self.assertEqual(results[0].path_display, '/2014/Google/CapstoneExcelTest.xlsx')
 
 if __name__ == "__main__":
-    
-    slackBot = SlackBot()
-    dropboxBot = DropboxBot()
-    
-    t = input("Enter Dropbox OAuth2 token For Test Account: ")
+
+    dropbox_token = open("DropboxSearchTokens.txt").readlines()[1].strip()
     tika.initVM()
     unittest.main()

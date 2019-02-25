@@ -2,7 +2,7 @@ from BagOfWords import BagOfWords
 import pdb
 class FileNameSearch:
 
-    def file_name_search(fileList, search):
+    def file_name_search(self, fileList, search):
 
         """
         Formats the fileList found on Dropbox to a list of fileNames. This is then passed to the BagOfWords to find

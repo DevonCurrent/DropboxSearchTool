@@ -19,21 +19,21 @@ class TestMessageParsing(unittest.TestCase):
 
     #Keywords should be split at spaces and turned lowercase
     def test_parse_keywords(self):
-        msg = Message("-fn This is a test", "N/A", "N/A", "N/A")
+        msg = Message("-k This is a test", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
 
         self.assertEqual(search.keywords, ["this", "is", "a", "test"])
 
 
     def test_parse_companies(self):
-        msg = Message("-fn This is a test -c IBM google apple", "N/A", "N/A", "N/A")
+        msg = Message("-k This is a test -c IBM google apple", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
 
         self.assertEqual(search.companies, ["ibm", "google", "apple"])
 
     
     def test_parse_years(self):
-        msg = Message("-fn This is a test -y 2015 2017 2018", "N/A", "N/A", "N/A")
+        msg = Message("-k This is a test -y 2015 2017 2018", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
 
         self.assertEqual(search.years, ["2015", "2017", "2018"])
@@ -61,7 +61,7 @@ class TestMessageParsing(unittest.TestCase):
         search = parse_message(DropboxBot, msg)
 
         botResp = search.dropbox_search(DropboxBot)
-        noKeywordsResp = "Not sure what you mean. Please make sure that you typed it correctly. Example: -fn cool -y 2014* -c google* where * is optional"
+        noKeywordsResp = "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional"
 
         self.assertEqual(botResp, noKeywordsResp)
 

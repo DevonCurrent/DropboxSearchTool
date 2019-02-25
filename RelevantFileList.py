@@ -22,7 +22,6 @@ class RelevantFileList:
             A list of files found on the Dropbox that are located in the specified companies and year fields.
         """
 
-        pdb.set_trace()
         dbx = dropboxBot.dbx
     
         cFlag = False
@@ -64,8 +63,5 @@ class RelevantFileList:
                         if companyEntry.name.lower() in search.companies:
                             for entry in dbx.files_list_folder(companyEntry.path_display).entries:
                                 fileList.append(entry)
-
-
-        keywords = ' '.join(search.keywords)
 
         return fileList

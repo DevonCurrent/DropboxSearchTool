@@ -1,4 +1,6 @@
 from FileSearch import FileSearch
+from FileContentSearch import FileContentSearch
+from FileNameSearch import FileNameSearch
 
 from RecentFileSearch import RecentFileSearch
 from RelevantFileList import RelevantFileList
@@ -52,10 +54,12 @@ class Search:
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
 
-        #if self.kf == True:
+        if self.kf == True:
+            return FileContentSearch().file_content_search(dropboxBot, fileList, self)
         
-        #if self.kn == True:
-        
+        if self.kn == True:
+            return FileNameSearch.file_name_search(dropboxBot, fileList, self)
+            
         return fileSearch.file_search(dropboxBot, fileList, self)
 
     

@@ -1,7 +1,6 @@
 from StemmedCountVectorizer import StemmedCountVectorizer
 import scipy as sp
 import sys
-import pdb
 
 class BagOfWords:
 

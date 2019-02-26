@@ -151,7 +151,7 @@ class TestFileContentSearch(unittest.TestCase):
         search.companies = ['google']
 
         fileList = RelevantFileList.retrieve_relevant_files(dbx, search)
-        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf']
+        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf', 'txt']
 
         list = []
         

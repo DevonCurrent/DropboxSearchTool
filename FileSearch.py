@@ -35,21 +35,28 @@ class FileSearch:
         accurateDocList
             The list of files that are most accurate to the search that the Slack user requested.
         """
-        toBeSearchedList = []
+        list = []
+        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf', 'txt']
 
-        for files in fileList:
-            metadata, resp = dropboxBot.dbx.files_download(files.path_display)
+        for file in fileList:
+            if any(fileType in file.name for fileType in searchableFileTypes):
+                metadata, resp = dropboxBot.dbx.files_download(file.path_display)
             
-            #Currently not using the metadata
-            del metadata
+                #Currently not using the metadata
+                del metadata
 
-            stream = BytesIO(resp.content)
-            parsed = parser.from_buffer(stream)
-            docString = parsed["content"].lower()
-            docString = docString + ' ' + files.name
+                stream = BytesIO(resp.content)
+                parsed = parser.from_buffer(stream)
+                docString = parsed["content"].lower()
 
-            toBeSearchedList.append(docString)
+                #Adds file name to doc string so that it is also searched
+                docString = docString + " " + file.name
+
+                list.append(docString)
+            else:
+                #Adds filenames to search instead of content
+                list.append(file.name)
         
         keywords = ' '.join(search.keywords)
 
-        return BagOfWords.find_accurate_docs(fileList, toBeSearchedList, keywords)
+        return BagOfWords.find_accurate_docs(fileList, list, keywords)

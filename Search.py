@@ -43,14 +43,14 @@ class Search:
         """
 
         if(self.help):
-            return "To search for files use one of the following: \n -fn for a file's name. \n -ft for the file type. \n -fc for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created "
+            return "To search for files use one of the following: \n -k for a specific keyword. \n -fn for a file's name. \n -fc for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created "
         
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)
 
         #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
         elif(self.keywords == []):
-            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional"
+            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional. If you need help please enter -h."
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
 

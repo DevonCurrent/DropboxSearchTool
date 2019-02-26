@@ -36,7 +36,7 @@ class FileSearch:
             The list of files that are most accurate to the search that the Slack user requested.
         """
         list = []
-        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf', 'txt']
+        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf', '.txt']
 
         for file in fileList:
             if any(fileType in file.name for fileType in searchableFileTypes):

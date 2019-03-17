@@ -1,6 +1,7 @@
 from StemmedCountVectorizer import StemmedCountVectorizer
 import scipy as sp
 import sys
+import pdb
 
 class BagOfWords:
 
@@ -10,6 +11,14 @@ class BagOfWords:
         v2Normalized = v2/sp.linalg.norm(v2.toarray())
         delta = v1Normalized - v2Normalized
         return sp.linalg.norm(delta.toarray())
+
+    def normalize(distList):
+        maxWeight = max(distList)
+        i = 0
+        for weight in distList:
+            distList[i] = (weight * (1/maxWeight))
+            i = i + 1
+
 
     def find_accurate_docs(fileList, fileWordList, keywords):
 
@@ -49,16 +58,23 @@ class BagOfWords:
                 continue
             fileWordList_vec = trainVectors.getrow(i)
             d = BagOfWords.dist_norm(fileWordList_vec, keywordsVec)   
-            #print("=== fileWordList %i with dist=%.2f: %s"%(i, d, fileWordList[i]))
             distList.append(d)
+        
+        BagOfWords.normalize(distList) # normalizes the distList so that we can choose what accuracy threshold to return to user
+
+        """
+        for i in range(0, numSamples):
+            print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[i], fileWordList[i]))
+        """
 
         bestDocs = []
         #selects only the files that have smallest distance
-        #print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
+        print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
         for i in range(0, RETURN_SIZE):
             doc = distList.index(min(distList))
-            #print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
-            bestDocs.append(fileList[doc])
-            distList[doc] = sys.maxsize
+            print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
+            if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
+                bestDocs.append(fileList[doc])
+                distList[doc] = sys.maxsize # prevent file from being chosen twice
         
         return bestDocs

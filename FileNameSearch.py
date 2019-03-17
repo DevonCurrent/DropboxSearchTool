@@ -23,7 +23,13 @@ class FileNameSearch:
         
         fileNameList = []
         for entry in fileList:
-            fileNameList.append(entry.name)
+            # this removes the .ext from entry names when adding to fileNameList
+            splitEntry = entry.name.split('.')
+            fileName = ""
+            for word in splitEntry[:-1]: # there could be more than one '.'
+                fileName += word
+
+            fileNameList.append(fileName)
 
         keywords = ' '.join(search.keywords)
 

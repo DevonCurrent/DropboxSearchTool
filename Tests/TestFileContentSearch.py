@@ -20,11 +20,11 @@ from io import BytesIO
 
 class TestFileContentSearch(unittest.TestCase):
 
-    dropbox_token = ''
+    dropboxToken = ''
 
     def test_docx(self):
         warnings.simplefilter("ignore", ResourceWarning)
-        dbx = dropbox.Dropbox(dropbox_token)
+        dbx = dropbox.Dropbox(dropboxToken)
 
         try:
             dbx.users_get_current_account()
@@ -57,7 +57,7 @@ class TestFileContentSearch(unittest.TestCase):
     def test_pptx(self):
         warnings.simplefilter("ignore", ResourceWarning)
         
-        dbx = dropbox.Dropbox(dropbox_token)
+        dbx = dropbox.Dropbox(dropboxToken)
 
         try:
             dbx.users_get_current_account()
@@ -96,7 +96,7 @@ class TestFileContentSearch(unittest.TestCase):
     def test_xlsx(self):
         warnings.simplefilter("ignore", ResourceWarning)
         
-        dbx = dropbox.Dropbox(dropbox_token)
+        dbx = dropbox.Dropbox(dropboxToken)
 
         try:
             dbx.users_get_current_account()
@@ -119,7 +119,7 @@ class TestFileContentSearch(unittest.TestCase):
     def test_keyword(self):
         warnings.simplefilter("ignore", ResourceWarning)
         
-        dbx = dropbox.Dropbox(dropbox_token)
+        dbx = dropbox.Dropbox(dropboxToken)
 
         try:
             dbx.users_get_current_account()
@@ -183,6 +183,6 @@ class TestFileContentSearch(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    dropbox_token = open("DropboxSearchTokens.txt").readlines()[1].strip()
+    dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
     tika.initVM()
     unittest.main()

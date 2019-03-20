@@ -1,29 +1,31 @@
 import unittest
 import warnings
-import tika
-from tika import parser
 import sys, os
 
 runPath = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(runPath, ".."))
 
-from DropboxBot import DropboxBot
-from Search import Search
-from RelevantFileList import RelevantFileList
-from BagOfWords import BagOfWords
 import dropbox
 from dropbox.exceptions import AuthError
 from io import BytesIO
+import tempfile
+
+from docx import Document
+from pptx import Presentation
+import openpyxl
+import PyPDF2
+from subprocess import check_output
 
 #from FileContentSearch import FileContentSearch
 
 
 class TestFileContentSearch(unittest.TestCase):
 
-    dropboxToken = ''
-
     def test_docx(self):
+        
         warnings.simplefilter("ignore", ResourceWarning)
+        dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
+        
         dbx = dropbox.Dropbox(dropboxToken)
 
         try:
@@ -41,21 +43,32 @@ class TestFileContentSearch(unittest.TestCase):
 
         stream = BytesIO(f.content)
 
-        """
         doc = Document(stream)
         fullText = []
         for para in doc.paragraphs:
             fullText.append(para.text)
 
-        print('\n'.join(fullText))
-        """
+        #print('\n'.join(fullText))
 
-        parsed = parser.from_buffer(stream)
-        self.assertNotEqual(len(parsed["content"]),0)
+    def test_doc(self):
+        warnings.simplefilter("ignore", ResourceWarning)
+        dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
+        
+        dbx = dropbox.Dropbox(dropboxToken)
+
+        out = ''
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.doc') as temp:
+            dbx.files_download_to_file(temp.name, '/2014/Google/SRS4.doc')
+            out = check_output(['antiword', '-f' ,temp.name])
+
+        #print(out)
 
 
     def test_pptx(self):
+
         warnings.simplefilter("ignore", ResourceWarning)
+        dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
         
         dbx = dropbox.Dropbox(dropboxToken)
 
@@ -67,7 +80,7 @@ class TestFileContentSearch(unittest.TestCase):
             exit()
 
         try:
-            metadata, f = dbx.files_download('/2014/Google/4.FeasibilityStudy.ppt')
+            metadata, f = dbx.files_download('/2014/Google/powertest.pptx')
         except dropbox.files.DownloadError as err:
             print(err)
             exit()
@@ -75,7 +88,6 @@ class TestFileContentSearch(unittest.TestCase):
         stream = BytesIO(f.content)
 
         #pptx only works with .pptx but not with .ppt
-        """
         prs = Presentation(stream)
         text_runs = []
 
@@ -87,14 +99,12 @@ class TestFileContentSearch(unittest.TestCase):
                     for run in paragraph.runs:
                         text_runs.append(run.text)
 
-        print(text_runs)
-        """
-
-        parsed = parser.from_buffer(stream)
-        self.assertNotEqual(len(parsed["content"]),0)
+        #print(text_runs)
     
     def test_xlsx(self):
+
         warnings.simplefilter("ignore", ResourceWarning)
+        dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
         
         dbx = dropbox.Dropbox(dropboxToken)
 
@@ -106,18 +116,28 @@ class TestFileContentSearch(unittest.TestCase):
             exit()
 
         try:
-            metadata, f = dbx.files_download('/2014/Google/CapstoneExcelTest.xlsx')
+            metadata, f = dbx.files_download('/2014/Google/CapstoneExcel.xlsx')
         except dropbox.files.DownloadError as err:
             print(err)
             exit()
+        
+        stream = BytesIO(f.content)
 
-        parsed = parser.from_buffer(BytesIO(f.content))
+        book = openpyxl.load_workbook(stream)
 
-        count = parsed["content"].count('Test')
-        self.assertEqual(count, 12)
-    
-    def test_keyword(self):
+        string = ''
+
+        for sheet in book:
+            for row in sheet.iter_rows():
+                for cell in row:
+                    string += ' '
+                    string += str(cell.value)
+
+        #print(string)
+
+    def test_pdf(self):
         warnings.simplefilter("ignore", ResourceWarning)
+        dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
         
         dbx = dropbox.Dropbox(dropboxToken)
 
@@ -135,54 +155,16 @@ class TestFileContentSearch(unittest.TestCase):
             exit()
 
         stream = BytesIO(f.content)
-        parsed = parser.from_buffer(stream)
 
-        count = parsed["content"].count('Renet')
-        self.assertEqual(count, 42)
+        pdfReader = PyPDF2.PdfFileReader(stream)
+        numberOfPages = pdfReader.numPages
 
-    def test_full_text_search_object(self):
-        warnings.simplefilter("ignore", ResourceWarning)
-        
-        dbx = DropboxBot()
+        string = ''
+        for i in range(0, numberOfPages):
+            string += ' '
+            string += str(pdfReader.getPage(i).extractText())
 
-        search = Search()
-        search.keywords = ['Test', 'TRUE', 'False']
-        search.years = ['2014']
-        search.companies = ['google']
-
-        fileList = RelevantFileList.retrieve_relevant_files(dbx, search)
-        searchableFileTypes = ['.doc','.docx', '.ppt', '.pptx', 'xlsx', '.pdf', 'txt']
-
-        list = []
-        
-        for file in fileList:
-            if any(fileType in file.name for fileType in searchableFileTypes):
-                metadata, resp = dbx.dbx.files_download(file.path_display)
-            
-                #Currently not using the metadata
-                del metadata
-
-                stream = BytesIO(resp.content)
-                parsed = parser.from_buffer(stream)
-                docString = parsed["content"].lower()
-
-                #Adds file name to doc string so that it is also searched
-                docString = docString + " " + file.name
-
-                list.append(docString)
-            else:
-                #Adds filenames to search instead of content
-                list.append(file.name)
-
-
-        keywords = ' '.join(search.keywords)
-
-        results = BagOfWords.find_accurate_docs(fileList, list, keywords)
-
-        self.assertEqual(results[0].path_display, '/2014/Google/CapstoneExcelTest.xlsx')
+        #print(string)
 
 if __name__ == "__main__":
-
-    dropboxToken = open("DropboxSearchTokens.txt").readlines()[1].strip()
-    tika.initVM()
     unittest.main()

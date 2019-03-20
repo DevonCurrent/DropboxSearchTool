@@ -32,103 +32,27 @@ class RelevantFileList:
         if(len(search.years)>0):
             yFlag = True
 
-        """
-
-        fileList = []
         pathList = []
+        fileList = []
 
-        for entry in dbx.files_list_folder('', True).entries:
-            #Checks only files, no folders
-            if "." in entry.path_display:
+        for entry in dropboxbot.dbx.files_list_folder('',True).entries:
+            if '.' in entry.path_display:
                 path = entry.path_display.split('/')
-                
+
                 #removes empty first element
                 path.pop(0)
 
-                path.append(entry)
                 pathList.append(path)
 
         if yFlag:
-            for path in pathList:
-                if path[0] not in search.years:
-                    pathList.remove(path)
-
+            filtered_pathList = [(x,y,z) for (x,y,z) in pathList if x in search.years]
+            pathList = filtered_pathList
+        
         if cFlag:
-            for path in pathList:
-                if path[1] not in search.companies:
-                    pathList.remove(path)    
-
+            filtered_pathList = [(x,y,z) for (x,y,z) in pathList if y in search.companies]
+            pathList = filtered_pathList
 
         for path in pathList:
-            print(path)
-            fileList.append(path[3])
-    
-        return fileList
-
-        """
-
-        fileList = []
-
-
-
-        if(yFlag == False) and (cFlag == False):
-
-            #searches recursively through the entire dropbox beginning at the root
-
-            for entry in dbx.files_list_folder('', True).entries:
-
-                if "." in entry.path_display:
-
-                    fileList.append(entry)
-
-    
-
-        elif(yFlag == True) and (cFlag == False):
-
-            #searches through specific YEAR folders, but no specific companies
-
-            for yearEntry in dbx.files_list_folder('').entries:
-
-                if yearEntry.name in search.years:
-
-                    for entry in dbx.files_list_folder(yearEntry.path_display, True).entries:
-
-                        fileList.append(entry)
-
-        
-
-        elif(yFlag == False) and (cFlag == True):
-
-            #searches through specific company folders, but any year
-
-            for yearEntry in dbx.files_list_folder('').entries:
-
-                for companyEntry in dbx.files_list_folder(yearEntry.path_display).entries:
-
-                    if companyEntry.name.lower() in search.companies:
-
-                        for entry in dbx.files_list_folder(companyEntry.path_display).entries:
-
-                            fileList.append(entry)
-
-
-
-        else:   #will need to search through only the years and companies specified by the user
-
-            #searches through the YEAR folders in the Dropbox
-
-            for yearEntry in dbx.files_list_folder('').entries:
-
-                if yearEntry.name in search.years:
-
-                    for companyEntry in dbx.files_list_folder(yearEntry.path_display).entries:
-
-                        if companyEntry.name.lower() in search.companies:
-
-                            for entry in dbx.files_list_folder(companyEntry.path_display).entries:
-
-                                fileList.append(entry)
-
-
+            fileList.append(path[2])
 
         return fileList

@@ -1,5 +1,5 @@
 from FileSearch import FileSearch
-from FileContentSearch import FileContentSearch
+#from FileContentSearch import FileContentSearch
 from FileNameSearch import FileNameSearch
 
 from RecentFileSearch import RecentFileSearch

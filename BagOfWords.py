@@ -14,6 +14,13 @@ class BagOfWords:
         return sp.linalg.norm(delta.toarray())
 
     def normalize(distList):
+        if len(distList) == 1:
+            if(distList[0] < 0.90):
+                return # does not need to normalize if there is only one. Will be on scale of 0-1
+            else:
+                distList = []
+                return
+
         maxWeight = max(distList)
         i = 0
         for weight in distList:
@@ -81,5 +88,5 @@ class BagOfWords:
 
         
         #print("--- %s seconds ---" % (time.time() - startTime))
-        
+
         return bestDocs

@@ -117,7 +117,7 @@ class TestRelevantFiles(unittest.TestCase):
             if path[1] != 'Google':
                 if path[1] != 'IBM':
                     self.fail()
-                    
+
 
 if __name__ == "__main__":
     os.chdir('..')

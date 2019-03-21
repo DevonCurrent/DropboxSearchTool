@@ -19,7 +19,7 @@ def split_search_terms(search, value, letter):
             elif letter is 'y':
                 search.years.append(separated_keywords[i])
             elif letter is 't':
-                search.type.append(separated_keywords[i])
+                search.types.append(separated_keywords[i])
 
         if letter is 'k':
             if '' in search.keywords:  # removes blank space at the end of a search
@@ -31,8 +31,8 @@ def split_search_terms(search, value, letter):
             if '' in search.years:  # removes blank space at the end of a search
                 search.years.remove('')
         elif letter is 't':
-            if '' in search.type:  # removes blank space at the end of a search
-                search.type.remove('')
+            if '' in search.types:  # removes blank space at the end of a search
+                search.types.remove('')
 
 
 def parse_message(dropboxBot, message):
@@ -72,6 +72,9 @@ def parse_message(dropboxBot, message):
 
             elif value[0] == 'y':
                 split_search_terms(search, value, 'y')
+
+            elif value[0] == 't':
+                split_search_terms(search, value, 't')
 
             elif value[0] == 'h':
                 search.help = True

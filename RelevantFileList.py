@@ -26,11 +26,14 @@ class RelevantFileList:
     
         cFlag = False
         yFlag = False
+        tFlag = False
 
         if(len(search.companies)>0):
             cFlag = True
         if(len(search.years)>0):
             yFlag = True
+        if(len(search.types)>0):
+            tFlag = True
 
         entryList = []
         fileList = []
@@ -38,18 +41,26 @@ class RelevantFileList:
         for entry in dbx.files_list_folder('',True).entries:
             if '.' in entry.path_display:
                 path = entry.path_display.split('/')
-                path.append(entry)
-                #removes empty first element
-                path.pop(0)
 
+                path.pop(0) #removes empty first element
+                path[1] = path[1].lower() # lowercase the company names so they will match search.companies
+                path[-1] = path[-1].split('.')[-1] # last element is file extension (type)
+
+
+                path.append(entry) # add file metadata
                 entryList.append(path)
 
         if yFlag:
-            filtered_entryList = [(year,_,_,_) for (year,_,_,_) in entryList if year in search.years]
+            filtered_entryList = [(year,x,y,z) for (year,x,y,z) in entryList if year in search.years]
             entryList = filtered_entryList
         
         if cFlag:
-            filtered_entryList = [(_,comp,_,_) for (_,comp,_,_) in entryList if comp in search.companies]
+            filtered_entryList = [(v,comp,y,z) for (v,comp,y,z) in entryList if comp in search.companies]
+            entryList = filtered_entryList
+
+        if tFlag:
+            filtered_entryList = [(v,x,types,z) for (v,x,types,z) in entryList if types in search.types]
+            pdb.set_trace()
             entryList = filtered_entryList
 
         for entry in entryList:

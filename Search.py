@@ -17,7 +17,7 @@ class Search:
         self.keywords = []
         self.companies = []
         self.years = []
-        self.type = []
+        self.types = []
         self.recentFileSearch = False
         self.fileTypeSearch = False
         self.help = False
@@ -43,7 +43,7 @@ class Search:
         """
 
         if(self.help):
-            return "To search for files use one of the following: \n -k for a specific keyword. \n -kn for a file's name. \n -kf for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created "
+            return "To search for files use one of the following: \n -k for a specific keyword. \n -kn for a file's name. \n -kf for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created \n -t for the type of file (doc, ppt, pdf)"
         
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)

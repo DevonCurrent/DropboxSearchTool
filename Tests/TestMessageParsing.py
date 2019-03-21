@@ -38,6 +38,13 @@ class TestMessageParsing(unittest.TestCase):
 
         self.assertEqual(search.years, ["2015", "2017", "2018"])
 
+
+    def test_parse_types(self):
+        msg = Message("-k This is a test -t .pdf docx .doc", "N/A", "N/A", "N/A")
+        search = parse_message(dropboxBot, msg)
+
+        self.assertEqual(search.types, ["pdf", "docx", "doc"])
+
     
     def test_recent_file_search_flag(self):
         msg = Message("-r", "N/A", "N/A", "N/A")
@@ -45,12 +52,13 @@ class TestMessageParsing(unittest.TestCase):
 
         self.assertTrue(search.recentFileSearch)
     
+
     def test_help_response(self):
         msg = Message("-h", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
         
-        botResp = search.dropbox_search(DropboxBot)
-        helpResp = "To search for files use one of the following: \n -fn for a file's name. \n -ft for the file type. \n -fc for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created "
+        botResp = search.dropbox_search(DropboxBot, msg)
+        helpResp = "To search for files use one of the following: \n -k for a specific keyword. \n -kn for a file's name. \n -kf for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created \n -t for the type of file (doc, ppt, pdf)"
 
         self.assertEqual(botResp, helpResp)
     
@@ -60,8 +68,8 @@ class TestMessageParsing(unittest.TestCase):
         msg = Message("-y 2015 2017 2018", "N/A", "N/A", "N/A")
         search = parse_message(DropboxBot, msg)
 
-        botResp = search.dropbox_search(DropboxBot)
-        noKeywordsResp = "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional"
+        botResp = search.dropbox_search(DropboxBot, msg)
+        noKeywordsResp = "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional. If you need help please enter -h."
 
         self.assertEqual(botResp, noKeywordsResp)
 

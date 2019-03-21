@@ -1,6 +1,7 @@
 from Message import Message
 from Search import Search
 from DropboxBot import DropboxBot
+import pdb
 
 """
 Parses the message the slack user sent to the slack bot. 
@@ -19,6 +20,8 @@ def split_search_terms(search, value, letter):
             elif letter is 'y':
                 search.years.append(separated_keywords[i])
             elif letter is 't':
+                if(separated_keywords[i].startswith(".")):
+                    separated_keywords[i] = separated_keywords[i].split(".")[1]
                 search.types.append(separated_keywords[i])
 
         if letter is 'k':

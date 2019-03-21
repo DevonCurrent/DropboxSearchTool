@@ -46,7 +46,6 @@ class RelevantFileList:
                 path[1] = path[1].lower() # lowercase the company names so they will match search.companies
                 path[-1] = path[-1].split('.')[-1] # last element is file extension (type)
 
-
                 path.append(entry) # add file metadata
                 entryList.append(path)
 
@@ -60,7 +59,6 @@ class RelevantFileList:
 
         if tFlag:
             filtered_entryList = [(v,x,types,z) for (v,x,types,z) in entryList if types in search.types]
-            pdb.set_trace()
             entryList = filtered_entryList
 
         for entry in entryList:

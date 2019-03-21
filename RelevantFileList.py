@@ -32,27 +32,27 @@ class RelevantFileList:
         if(len(search.years)>0):
             yFlag = True
 
-        pathList = []
+        entryList = []
         fileList = []
 
-        for entry in dropboxbot.dbx.files_list_folder('',True).entries:
+        for entry in dbx.files_list_folder('',True).entries:
             if '.' in entry.path_display:
                 path = entry.path_display.split('/')
-
+                path.append(entry)
                 #removes empty first element
                 path.pop(0)
 
-                pathList.append(path)
+                entryList.append(path)
 
         if yFlag:
-            filtered_pathList = [(x,y,z) for (x,y,z) in pathList if x in search.years]
-            pathList = filtered_pathList
+            filtered_entryList = [(year,_,_,_) for (year,_,_,_) in entryList if year in search.years]
+            entryList = filtered_entryList
         
         if cFlag:
-            filtered_pathList = [(x,y,z) for (x,y,z) in pathList if y in search.companies]
-            pathList = filtered_pathList
+            filtered_entryList = [(_,comp,_,_) for (_,comp,_,_) in entryList if comp in search.companies]
+            entryList = filtered_entryList
 
-        for path in pathList:
-            fileList.append(path[2])
+        for entry in entryList:
+            fileList.append(entry[3])
 
         return fileList

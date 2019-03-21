@@ -2,6 +2,7 @@ from StemmedCountVectorizer import StemmedCountVectorizer
 import scipy as sp
 import sys
 import pdb
+import time
 
 class BagOfWords:
 
@@ -21,6 +22,7 @@ class BagOfWords:
 
 
     def find_accurate_docs(fileList, fileWordList, keywords):
+        startTime = time.time()
 
         """
         An algorithm that vectorizes the fileList into a 2D array containing the number of instances used of each
@@ -69,12 +71,15 @@ class BagOfWords:
 
         bestDocs = []
         #selects only the files that have smallest distance
-        print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
+        #print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
         for i in range(0, RETURN_SIZE):
             doc = distList.index(min(distList))
-            print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
+        #    print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
             if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
                 bestDocs.append(fileList[doc])
                 distList[doc] = sys.maxsize # prevent file from being chosen twice
+
+        
+        #print("--- %s seconds ---" % (time.time() - startTime))
         
         return bestDocs

@@ -26,10 +26,8 @@ class FileSearch:
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
     """
-<<<<<<< HEAD
+    
     dropboxBot = None
-=======
->>>>>>> 03520458b9ea2ef604592f48f2e329153babc54d
 
     def _NameSearch(self, dropboxBot, fileList, search):
         fileNameTextList = []

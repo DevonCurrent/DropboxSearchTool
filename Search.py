@@ -1,17 +1,43 @@
-from FileSearch import FileSearch
-#from FileContentSearch import FileContentSearch
-from FileNameSearch import FileNameSearch
+import FileSearch
 
 from RecentFileSearch import RecentFileSearch
 from RelevantFileList import RelevantFileList
 
-"""
-Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
-Handles exceptions such as help (-h), incorrect searches, and having no keywords in a given search.
-
-"""
 
 class Search:
+    """
+    Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
+    Handles exceptions such as help (-h), incorrect searches, and having no keywords in a given search.
+    -----
+    Attributes
+    -----
+    keywords: str array
+        keywords entered 
+    companies: str array
+        companies entered
+    years: str array
+        years entered
+    types: str array
+        file types entered
+    recentFileSearch: boolean
+        keyword for recent files
+    fileTypeSearch: boolean
+        keyword for file type
+    help: boolean
+        keyword for help
+    kn: boolean
+        keyword for file name
+    kf: boolean
+        keyword for file content
+    -----
+    Methods
+    -----
+    dropbox_search(self, dropboxBot, fileSearch)
+        A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
+        search algorithm, or return a message to the user.
+    retrieve_hyperlink_list(self, dropboxBot, bestDocFileList)
+        Gathers the hyperlinks to the files that have been found matching the input
+    """
 
     def __init__(self):
         self.keywords = []
@@ -24,7 +50,7 @@ class Search:
         self.kn = False
         self.kf = False
 
-    def dropbox_search(self, dropboxBot, fileSearch):
+    def dropbox_search(self, dropboxBot):
         """
         A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
         search algorithm, or return a message to the user.
@@ -43,8 +69,8 @@ class Search:
         """
 
         if(self.help):
-            return "To search for files use one of the following: \n -k for a specific keyword. \n -kn for a file's name. \n -kf for a file's content. \n You may also use these optionally for more specific searches: \n -c for the company the file was made for. \n  -y for the year the file was created \n -t for the type of file (doc, ppt, pdf)"
-        
+            return "If you need to search for files start a direct message with me and use the following commands: \n -k for a specific keyword. \n -kn for a file's name. \n -kc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)
 
@@ -54,13 +80,14 @@ class Search:
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
 
+        fs = FileSearch.FileSearch(dropboxBot)
+
         if self.kf == True:
-            return FileContentSearch().file_content_search(dropboxBot, fileList, self)
-        
-        if self.kn == True:
-            return FileNameSearch.file_name_search(dropboxBot, fileList, self)
-            
-        return fileSearch.file_search(dropboxBot, fileList, self)
+            return fs.Search(fileList, self, 0)
+        elif self.kn == True:
+            return fs.Search(fileList, self, 1)
+        else:
+            return fs.Search(fileList, self, 0)
 
     
 

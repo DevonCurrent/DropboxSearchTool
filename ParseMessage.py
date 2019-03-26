@@ -4,9 +4,15 @@ from DropboxBot import DropboxBot
 import pdb
 
 """
-Parses the message the slack user sent to the slack bot. 
-A Search object with search parameters is fed the parsed message data, to determine the type of search to do.
-
+    Parses the message entered by the users
+    -----
+    Methods
+    -----
+    split_search_terms(search, value, letter)
+        splits the enterns search terms based on the different key words
+    parse_message(dropboxBot, message)
+        Parses a message to create a Search object that can be used to determine the correct search algorithm
+        to find the appropriate file.
 """
 
 def split_search_terms(search, value, letter):

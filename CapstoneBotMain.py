@@ -2,15 +2,23 @@ from Message import Message
 from ParseMessage import parse_message
 from SlackBot import SlackBot
 from DropboxBot import DropboxBot
-from FileSearch import FileSearch
+import FileSearch
 import threading
 
+"""
+    Main Class used to start the bot and receive searches
+    -----
+    Methods
+    -----
+    search_thread(slackBot, dropboxBot, fileSearch, m)
+        takes search entered and returns the output to the user
+"""
 
-def search_thread(slackBot, dropboxBot, fileSearch, m):
+def search_thread(slackBot, dropboxBot, m):
 
     search = parse_message(dropboxBot, m)
 
-    searchResult = search.dropbox_search(dropboxBot, fileSearch)
+    searchResult = search.dropbox_search(dropboxBot)
 
     if(type(searchResult) == str):
         resp = Message(searchResult, m.user, m.msgID, m.channel)
@@ -41,7 +49,6 @@ if __name__ == "__main__":
 
     slackBot = SlackBot()
     dropboxBot = DropboxBot()
-    fileSearch = FileSearch()
 
     print("The program can now receive search queries")
 
@@ -49,6 +56,9 @@ if __name__ == "__main__":
         m = slackBot.listen_for_message()
       
         if m is not None:
+            """
             threading.Thread(target=search_thread,
-                args=(slackBot, dropboxBot, fileSearch, m)).start()
+                args=(slackBot, dropboxBot, m)).start()
+            """
+            search_thread(slackBot, dropboxBot, m)
             

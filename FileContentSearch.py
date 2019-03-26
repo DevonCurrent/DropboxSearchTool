@@ -7,6 +7,15 @@ import dropbox
 from io import BytesIO
 
 class FileContentSearch:
+    """
+    Class used to represent the file content search
+    -----
+    Methods
+    -----
+    file_content_search(self, dropboxBot, fileList, search)
+        Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
+        BagOfWords to find the most accurate searches.
+    """
 
     def __init__(self):
         """

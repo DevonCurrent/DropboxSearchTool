@@ -122,7 +122,6 @@ class TestFileContentSearch(unittest.TestCase):
             exit()
         
         stream = BytesIO(f.content)
-
         book = openpyxl.load_workbook(stream)
 
         string = ''

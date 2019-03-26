@@ -5,6 +5,20 @@ import pdb
 import time
 
 class BagOfWords:
+    """
+    Class used to represent the file content search
+    -----
+    Methods
+    -----
+    dist_norm(v1, v2)
+        Finds Euclidean distance of fileWordList to the keywords
+    normalize(distList)
+        Normalizes the distance list
+    find_accurate_docs(fileList, fileWordList, keywords)
+        An algorithm that vectorizes the fileList into a 2D array containing the number of instances used of each
+        keyword in each file. The Euclidean distance can then be measured to return the smallest distance (the most
+        accurate file). 
+    """
 
     # finds Euclidean distance of fileWordList to the keywords
     def dist_norm(v1, v2):
@@ -55,6 +69,7 @@ class BagOfWords:
 
         #StemmedCountVectorizer creates a 2d array of word counts for each file            
         vectorizer = StemmedCountVectorizer(min_df=1) #can add "stop_words='english'" to remove common english words
+        
         trainVectors = vectorizer.fit_transform(fileWordList)
         numSamples, numFeatures = trainVectors.shape
 

@@ -2,6 +2,14 @@ import dropbox
 from dropbox.exceptions import AuthError
 
 class DropboxBot:
+    """
+    Class used to initialize the dropbox
+    -----
+    Attributes
+    -----
+    dbx: string
+        dropbox token
+    """
 
     def __init__(self):
         

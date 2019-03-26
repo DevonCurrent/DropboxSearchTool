@@ -1,7 +1,15 @@
 from BagOfWords import BagOfWords
 import pdb
 class FileNameSearch:
-
+    """
+    Class used to represent the file name search
+    -----
+    Methods
+    -----
+    file_name_search(self, fileList, search)
+        Formats the fileList found on Dropbox to a list of fileNames. This is then passed to the BagOfWords to find
+        the most accurate searches.
+    """
     def file_name_search(self, fileList, search):
 
         """

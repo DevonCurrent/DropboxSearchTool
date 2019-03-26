@@ -1,5 +1,12 @@
 class RecentFileSearch:
-
+    """
+    Class used to represent the recent files searched
+    -----
+    Methods
+    -----
+    recent_file_search(dropboxBot)
+        returns the the 5 most recently edited file in the dropbox
+    """
     def recent_file_search(dropboxBot):
 
         NUM_FILES = 5

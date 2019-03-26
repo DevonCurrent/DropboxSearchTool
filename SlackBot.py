@@ -2,7 +2,23 @@ from Message import Message
 from slackclient import SlackClient
 
 class SlackBot:
-
+    """
+    Class that initializes the slackbot
+     -----
+    Attributes
+    -----
+    slackClient: string
+        the slackbot token
+    id: user string
+        the slack user id
+    -----
+    Methods
+    -----
+    listen_for_message(self)
+        listens for a message sent by a user
+    send_slack_message(self, message)
+        sends the message a user inputs
+    """
     def __init__(self):
         slackToken = open("DropboxSearchTokens.txt").readline().rstrip()
 

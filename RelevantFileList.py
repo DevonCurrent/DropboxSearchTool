@@ -2,6 +2,15 @@ from BagOfWords import BagOfWords
 import pdb
 
 class RelevantFileList:
+    """
+    Class used to represent the relevent files to find based on the search the user enters
+    -----
+    Methods
+    -----
+    retrieve_relevant_files(dropboxBot, search)
+        Retrieves a list of files found on the Dropbox that are located in the specified companies and year fields.
+        Keywords are not used to determine this list
+    """
 
     def retrieve_relevant_files(dropboxBot, search):
         

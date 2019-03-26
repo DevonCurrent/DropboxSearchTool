@@ -5,13 +5,41 @@ from FileNameSearch import FileNameSearch
 from RecentFileSearch import RecentFileSearch
 from RelevantFileList import RelevantFileList
 
-"""
-Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
-Handles exceptions such as help (-h), incorrect searches, and having no keywords in a given search.
-
-"""
 
 class Search:
+    """
+    Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
+    Handles exceptions such as help (-h), incorrect searches, and having no keywords in a given search.
+    -----
+    Attributes
+    -----
+    keywords: str array
+        keywords entered 
+    companies: str array
+        companies entered
+    years: str array
+        years entered
+    types: str array
+        file types entered
+    recentFileSearch: boolean
+        keyword for recent files
+    fileTypeSearch: boolean
+        keyword for file type
+    help: boolean
+        keyword for help
+    kn: boolean
+        keyword for file name
+    kf: boolean
+        keyword for file content
+    -----
+    Methods
+    -----
+    dropbox_search(self, dropboxBot, fileSearch)
+        A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
+        search algorithm, or return a message to the user.
+    retrieve_hyperlink_list(self, dropboxBot, bestDocFileList)
+        Gathers the hyperlinks to the files that have been found matching the input
+    """
 
     def __init__(self):
         self.keywords = []

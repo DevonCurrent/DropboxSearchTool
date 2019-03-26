@@ -5,6 +5,14 @@ from DropboxBot import DropboxBot
 from FileSearch import FileSearch
 import threading
 
+"""
+    Main Class used to start the bot and receive searches
+    -----
+    Methods
+    -----
+    search_thread(slackBot, dropboxBot, fileSearch, m)
+        takes search entered and returns the output to the user
+"""
 
 def search_thread(slackBot, dropboxBot, fileSearch, m):
 

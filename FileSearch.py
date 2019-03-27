@@ -293,19 +293,27 @@ class FileSearch:
         total1 = time.time()
         
         fileParseType = []
+        """
         for file in fileList:
             filePath = file.path_display
             fileType = file.name.split('.')[-1]
             data = (fileType, filePath)
             fileParseType.append(data)
+        """
 
-        def downloadAndParse(fileType, filePath):
+        for index, file in enumerate(fileList, start=0):
+            filePath = file.path_display
+            fileType = file.name.split('.')[-1]
+            data = (fileType, filePath, index)
+            fileParseType.append(data)
+
+        def downloadAndParse(fileType, filePath, index):
             if (fileType == 'doc'):
                 t1 = time.time()
                 x = self._DocParse(filePath)
                 t2 = time.time()
 
-                print("Time for .doc file " + filePath + ": " + str(t2 - t1))
+                #print("Time for .doc file " + filePath + ": " + str(t2 - t1))
                 
                 return x
             elif (fileType == 'docx'):
@@ -313,7 +321,7 @@ class FileSearch:
                 x = self._DocxParse(filePath)
                 t2 = time.time()
 
-                print("Time for .docx file " + filePath + ": " + str(t2 - t1))
+                #print("Time for .docx file " + filePath + ": " + str(t2 - t1))
                 
                 return x
             elif (fileType == 'pptx'):
@@ -321,7 +329,7 @@ class FileSearch:
                 x = self._PptxParse(filePath)
                 t2 = time.time()
 
-                print("Time for .pptx file " + filePath + ": " + str(t2 - t1))
+                #print("Time for .pptx file " + filePath + ": " + str(t2 - t1))
                 
                 return x
             elif (fileType == 'xlsx'):
@@ -329,7 +337,7 @@ class FileSearch:
                 x = self._XlsxParse(filePath)
                 t2 = time.time()
 
-                print("Time for .Xlsx file " + filePath + ": " + str(t2 - t1))
+                #print("Time for .Xlsx file " + filePath + ": " + str(t2 - t1))
                 
                 return x
             elif (fileType == 'pdf'):
@@ -337,7 +345,7 @@ class FileSearch:
                 x = self._PdfParse(filePath)
                 t2 = time.time()
 
-                print("Time for .pdf file " + filePath + ": " + str(t2 - t1))
+                #print("Time for .pdf file " + filePath + ": " + str(t2 - t1))
                 
                 return x
             else:
@@ -345,20 +353,21 @@ class FileSearch:
                 x = self._NonsupportedParse(filePath)
                 t2 = time.time()
 
-                print("Time for other file " + filePath + ": " + str(t2 - t1))
+                #print("Time for other file " + filePath + ": " + str(t2 - t1))
                 
                 return x
 
         list = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-            future_parses = {executor.submit(downloadAndParse, file[0], file[1]): file for file in fileParseType}
+            future_parses = {executor.submit(downloadAndParse, file[0], file[1], file[2]): file for file in fileParseType}
             for future in concurrent.futures.as_completed(future_parses):
-                name = future_parses[future]
+                meta = future_parses[future]
                 try:
-                    data = future.result()
+                    return_data = future.result()
+                    data = (return_data, meta[2])
                     list.append(data)
                 except Exception as exc:
-                    print('%r generated an exception: %s' % (name, exc))
+                    print('%r generated an exception: %s' % (meta, exc))
         
         total2 = time.time()
 
@@ -366,8 +375,14 @@ class FileSearch:
 
         keywords = ' '.join(search.keywords)
 
-        return BagOfWords.find_accurate_docs(fileList, list, keywords)
+        #Resorts list to follow the original index, for BagOfWords
+        list.sort(key=lambda tup: tup[1])
 
-    def __init__(self, dropboxBot):
-        
+        data_only_list = []
+        for element in list:
+            data_only_list.append(element[0])
+
+        return BagOfWords.find_accurate_docs(fileList, data_only_list, keywords)
+
+    def __init__(self, dropboxBot): 
         self.dropboxBot = dropboxBot

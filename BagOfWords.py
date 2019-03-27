@@ -126,7 +126,7 @@ class BagOfWords:
         #print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
         for i in range(0, RETURN_SIZE):
             doc = distList.index(min(distList))
-        #    print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
+            #print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
             if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
                 bestDocs.append(fileList[doc])
                 distList[doc] = sys.maxsize # prevent file from being chosen twice

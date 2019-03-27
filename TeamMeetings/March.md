@@ -20,3 +20,20 @@ Distributed user stories to work on, and covered what we are currently working o
  * Ryan is working on finding a better file parser than tika. Also working to refactor the RelevantFileList to be more intuitive.
 
 We have yet to plan the next meeting with TDG, but will try to setup a meeting with them around the end of next week (3/23/19)
+
+# March 27th 2019
+### Bracken Library 3rd floor 3:00 pm
+
+Went through the list of what our bot can accomplish
+* Clients had few critical thoughts.
+* Through our videos, demonstrations, and notes they were able to understand how it works.
+* Wanted the k tag to be changed to f to represent the word file.
+* Access to Dropbox
+ * We were given access to their public education content 
+ * Unable to access the full dropbox due to security reasons
+* Testing
+ * We are to let them know when we are ready to deploy and test
+ * We need to provide a form so we have consistent data
+ * They would also like us to kickoff testing by providing a demo to employees
+* We can include anything we need to in our poster as long as it does not grant access to their information
+

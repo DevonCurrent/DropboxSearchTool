@@ -15,7 +15,25 @@ from subprocess import check_output
 import time
 
 import concurrent.futures
+"""
+        Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
+        BagOfWords to find the most accurate searches.'
 
+        Parameters
+        ----------
+        dropboxBot : class 'DropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+        fileList : list
+            A list of files found on the Dropbox that are located in the specified companies and year fields.
+        search : class 'Search.Search'
+            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
+        type : 0 for content search, 1 for name search
+        
+        Returns
+        -------
+        accurateDocList
+            The list of files that are most accurate to the search that the Slack user requested.
+        """
 class FileSearch:
     """
     Class used to represent the file search
@@ -25,11 +43,43 @@ class FileSearch:
     file_search(self, dropboxBot, fileList, search)
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
+    _NameSearch(self, dropboxBot, fileList, search)
+        Searches throught the file list based on file names
+    _DocxParse(self, filename)
+        Parses through Docx Files
+    _DocParse(self, filename)
+        Parses through Doc Files
+    _PptxParse(self, filename)
+        Parses through Pptx Files
+    _XlsxParse(self, filename)
+        Parses through Xlsx Files
+    _PdfParse(self, filename)
+        Parses through Pdf Files
+    _NonsupportedParse(self, filename)
+        Takes care of nonsupported files
+    Search(self, fileList, search, type)
+        Searches through the fileList from Dropbox    
     """
 
     dropboxBot = None
 
     def _NameSearch(self, dropboxBot, fileList, search):
+        """
+    Searches throught the file list based on file names
+
+    Parameters
+    ----------
+    dropboxBot : class 'DropboxBot.DropboxBot'
+        an instance of DropboxBot that has access to the Dropbox account
+    fileList : list
+            A list of files found on the Dropbox that are located in the specified companies and year fields.
+    search : class 'Search.Search'
+            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
+    Returns
+    -------
+    BagOfWords.find_accurate_docs(fileList, fileNameTextList, keywords)
+        The most accurate documents based on the BagOfWords class
+    """
         fileNameTextList = []
         for entry in fileList:
             # this removes the .ext from entry names when adding to fileNameTextList
@@ -44,6 +94,18 @@ class FileSearch:
         return BagOfWords.find_accurate_docs(fileList, fileNameTextList, keywords)
 
     def _DocxParse(self, filename):
+        """
+    Parses through Docx Files
+
+    Parameters
+    ----------
+    fileName : string
+        file name to parse through
+    Returns
+    -------
+    '\n'.join(fullText)
+        Full text of the parsed file
+    """
         try:
             metadata, f = self.dropboxBot.dbx.files_download(filename)
         except dropbox.files.DownloadError as err:
@@ -60,7 +122,18 @@ class FileSearch:
         return '\n'.join(fullText)
 
     def _DocParse(self, filename):
+        """
+    Parses through Docx Files
 
+    Parameters
+    ----------
+    fileName : string
+        file name to parse through
+    Returns
+    -------
+    out.lower()
+        the output of the parsed file in lowercase
+    """
         out = ''
         with tempfile.NamedTemporaryFile(delete=False, suffix='.doc') as temp:
             self.dropboxBot.dbx.files_download_to_file(temp.name, filename)
@@ -69,6 +142,18 @@ class FileSearch:
         return out.lower()
 
     def _PptxParse(self, filename):
+        """
+    Parses through Pptx Files
+
+    Parameters
+    ----------
+    fileName : string
+        file name to parse through
+    Returns
+    -------
+    text
+        the output of the parsed file
+    """
         try:
             metadata, f = self.dropboxBot.dbx.files_download(filename)
         except dropbox.files.DownloadError as err:
@@ -96,6 +181,18 @@ class FileSearch:
         return text
 
     def _XlsxParse(self, filename):
+        """
+    Parses through Xlsx Files
+
+    Parameters
+    ----------
+    fileName : string
+        file name to parse through
+    Returns
+    -------
+    string
+        the output of the parsed file in lowercase
+    """
         try:
             metadata, f = self.dropboxBot.dbx.files_download(filename)
         except dropbox.files.DownloadError as err:
@@ -118,6 +215,18 @@ class FileSearch:
         return string
 
     def _PdfParse(self, filename):
+        """
+    Parses through pdf Files
+
+    Parameters
+    ----------
+    fileName : string
+        file name to parse through
+    Returns
+    -------
+    string
+        the output of the parsed file in lowercase
+    """
         try:
             metadata, f = self.dropboxBot.dbx.files_download(filename)
         except dropbox.files.DownloadError as err:
@@ -138,6 +247,18 @@ class FileSearch:
         return string
 
     def _NonsupportedParse(self, filename):
+        """
+    Takes care of nonsupported files
+
+    Parameters
+    ----------
+    fileName : string
+        file name to parse through
+    Returns
+    -------
+    fileName
+        the file name
+    """
         splitEntry = filename.split('.')
         fileName = ""
 
@@ -147,6 +268,23 @@ class FileSearch:
         return fileName
 
     def Search(self, fileList, search, type):
+        """
+    Searches through the fileList from Dropbox  
+
+    Parameters
+    ----------
+    fileList : list
+            A list of files found on the Dropbox that are located in the specified companies and year fields.
+    search : class 'Search.Search'
+            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
+    type: int
+            type of search
+    Returns
+    -------
+    BagOfWords.find_accurate_docs(fileList, list, keywords)
+        The most accurate documents based on the BagOfWords class
+        
+    """
         if type:
             return self._NameSearch(self.dropboxBot, fileList, search)
 
@@ -231,23 +369,5 @@ class FileSearch:
         return BagOfWords.find_accurate_docs(fileList, list, keywords)
 
     def __init__(self, dropboxBot):
-        """
-        Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
-        BagOfWords to find the most accurate searches.'
-
-        Parameters
-        ----------
-        dropboxBot : class 'DropboxBot.DropboxBot'
-            an instance of DropboxBot that has access to the Dropbox account
-        fileList : list
-            A list of files found on the Dropbox that are located in the specified companies and year fields.
-        search : class 'Search.Search'
-            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
-        type : 0 for content search, 1 for name search
         
-        Returns
-        -------
-        accurateDocList
-            The list of files that are most accurate to the search that the Slack user requested.
-        """
         self.dropboxBot = dropboxBot

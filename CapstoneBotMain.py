@@ -15,6 +15,18 @@ import threading
 """
 
 def search_thread(slackBot, dropboxBot, m):
+    """
+        takes search entered and returns the output to the user
+
+        Parameters
+        ----------
+        slackBot: class 'slackBot.SlackBot'
+            an instance of Slack that has access to the slack account
+        dropboxBot:class 'dropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+        m:
+            Message instance
+    """
 
     search = parse_message(dropboxBot, m)
 

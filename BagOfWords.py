@@ -20,14 +20,44 @@ class BagOfWords:
         accurate file). 
     """
 
-    # finds Euclidean distance of fileWordList to the keywords
+    
     def dist_norm(v1, v2):
+        """
+        finds Euclidean distance of fileWordList to the keywords
+
+        Parameters
+        ----------
+        v1: Vector
+            First vector
+        v2: Vector
+            Second vector
+
+        Returns
+        -------
+        sp.linalg.norm(delta.toarray())
+            the change between normalized distances in an array
+            
+        """
         v1Normalized = v1/sp.linalg.norm(v1.toarray())
         v2Normalized = v2/sp.linalg.norm(v2.toarray())
         delta = v1Normalized - v2Normalized
         return sp.linalg.norm(delta.toarray())
 
     def normalize(distList):
+        """
+        normalizes the distList so that we can choose what accuracy threshold to return to user
+
+        Parameters
+        ----------
+        distList: List
+            the distance list
+
+        Returns
+        -------
+        distList
+            the normalized distlist
+            
+        """
         if len(distList) == 1:
             if(distList[0] < 0.90):
                 return # does not need to normalize if there is only one. Will be on scale of 0-1

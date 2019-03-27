@@ -89,7 +89,7 @@ class TestFileContentSearch(unittest.TestCase):
 
         #pptx only works with .pptx but not with .ppt
         prs = Presentation(stream)
-        text_runs = []
+        textRuns = []
 
         for slide in prs.slides:
             for shape in slide.shapes:
@@ -97,9 +97,9 @@ class TestFileContentSearch(unittest.TestCase):
                     continue
                 for paragraph in shape.text_frame.paragraphs:
                     for run in paragraph.runs:
-                        text_runs.append(run.text)
+                        textRuns.append(run.text)
 
-        #print(text_runs)
+        #print(textRuns)
     
     def test_xlsx(self):
 

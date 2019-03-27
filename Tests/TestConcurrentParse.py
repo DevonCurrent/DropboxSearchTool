@@ -13,15 +13,15 @@ class TestFileContentSearch(unittest.TestCase):
 
         dropboxBot = DropboxBot()
 
-        def downloadAndParse(fileType, filePath):
+        def download_and_parse(fileType, filePath):
             return [("Path: " + str(filePath)), ("Type: " + str(fileType)), ('')]
 
 
         dataList = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future_to_url = {executor.submit(downloadAndParse, file[0], file[1]): file for file in Files}
-            for future in concurrent.futures.as_completed(future_to_url):
-                url = future_to_url[future]
+            futureDownloads = {executor.submit(download_and_parse, file[0], file[1]): file for file in Files}
+            for future in concurrent.futures.as_completed(futureDownloads):
+                url = futureDownloads[future]
                 try:
                     data = future.result()
                     dataList.append(data)

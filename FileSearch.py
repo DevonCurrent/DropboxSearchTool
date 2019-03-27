@@ -43,27 +43,27 @@ class FileSearch:
     file_search(self, dropboxBot, fileList, search)
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
-    _NameSearch(self, dropboxBot, fileList, search)
+    _name_search(self, dropboxBot, fileList, search)
         Searches throught the file list based on file names
-    _DocxParse(self, filename)
+    _docx_parse(self, filename)
         Parses through Docx Files
-    _DocParse(self, filename)
+    _doc_parse(self, filename)
         Parses through Doc Files
-    _PptxParse(self, filename)
+    _pptx_parse(self, filename)
         Parses through Pptx Files
-    _XlsxParse(self, filename)
+    _xlsx_parse(self, filename)
         Parses through Xlsx Files
-    _PdfParse(self, filename)
+    _pdf_parse(self, filename)
         Parses through Pdf Files
-    _NonsupportedParse(self, filename)
+    _nonsupported_parse(self, filename)
         Takes care of nonsupported files
-    Search(self, fileList, search, type)
+    file_search(self, fileList, search, type)
         Searches through the fileList from Dropbox    
     """
 
     dropboxBot = None
 
-    def _NameSearch(self, dropboxBot, fileList, search):
+    def _name_search(self, dropboxBot, fileList, search):
         """
     Searches throught the file list based on file names
 
@@ -93,7 +93,7 @@ class FileSearch:
 
         return BagOfWords.find_accurate_docs(fileList, fileNameTextList, keywords)
 
-    def _DocxParse(self, filename):
+    def _docx_parse(self, filename):
         """
     Parses through Docx Files
 
@@ -121,7 +121,7 @@ class FileSearch:
 
         return '\n'.join(fullText)
 
-    def _DocParse(self, filename):
+    def _doc_parse(self, filename):
         """
     Parses through Docx Files
 
@@ -141,7 +141,7 @@ class FileSearch:
         
         return out.lower()
 
-    def _PptxParse(self, filename):
+    def _pptx_parse(self, filename):
         """
     Parses through Pptx Files
 
@@ -164,7 +164,7 @@ class FileSearch:
 
         #pptx only works with .pptx but not with .ppt
         prs = Presentation(stream)
-        text_runs = []
+        textRuns = []
             
         for slide in prs.slides:
             for shape in slide.shapes:
@@ -172,15 +172,15 @@ class FileSearch:
                     continue
                 for paragraph in shape.text_frame.paragraphs:
                     for run in paragraph.runs:
-                        text_runs.append(run.text.lower())
+                        textRuns.append(run.text.lower())
 
         text = ''
-        for run in text_runs:
+        for run in textRuns:
             text += run
         
         return text
 
-    def _XlsxParse(self, filename):
+    def _xlsx_parse(self, filename):
         """
     Parses through Xlsx Files
 
@@ -214,7 +214,7 @@ class FileSearch:
 
         return string
 
-    def _PdfParse(self, filename):
+    def _pdf_parse(self, filename):
         """
     Parses through pdf Files
 
@@ -246,7 +246,7 @@ class FileSearch:
 
         return string
 
-    def _NonsupportedParse(self, filename):
+    def _nonsupported_parse(self, filename):
         """
     Takes care of nonsupported files
 
@@ -286,7 +286,7 @@ class FileSearch:
         
     """
         if type:
-            return self._NameSearch(self.dropboxBot, fileList, search)
+            return self._name_search(self.dropboxBot, fileList, search)
 
         list = []
 
@@ -307,10 +307,10 @@ class FileSearch:
             data = (fileType, filePath, index)
             fileParseType.append(data)
 
-        def downloadAndParse(fileType, filePath, index):
+        def download_and_parse(fileType, filePath, index):
             if (fileType == 'doc'):
                 t1 = time.time()
-                x = self._DocParse(filePath)
+                x = self._doc_parse(filePath)
                 t2 = time.time()
 
                 #print("Time for .doc file " + filePath + ": " + str(t2 - t1))
@@ -318,7 +318,7 @@ class FileSearch:
                 return x
             elif (fileType == 'docx'):
                 t1 = time.time()
-                x = self._DocxParse(filePath)
+                x = self._docx_parse(filePath)
                 t2 = time.time()
 
                 #print("Time for .docx file " + filePath + ": " + str(t2 - t1))
@@ -326,7 +326,7 @@ class FileSearch:
                 return x
             elif (fileType == 'pptx'):
                 t1 = time.time()
-                x = self._PptxParse(filePath)
+                x = self._pptx_parse(filePath)
                 t2 = time.time()
 
                 #print("Time for .pptx file " + filePath + ": " + str(t2 - t1))
@@ -334,7 +334,7 @@ class FileSearch:
                 return x
             elif (fileType == 'xlsx'):
                 t1 = time.time()
-                x = self._XlsxParse(filePath)
+                x = self._xlsx_parse(filePath)
                 t2 = time.time()
 
                 #print("Time for .Xlsx file " + filePath + ": " + str(t2 - t1))
@@ -342,7 +342,7 @@ class FileSearch:
                 return x
             elif (fileType == 'pdf'):
                 t1 = time.time()
-                x = self._PdfParse(filePath)
+                x = self._pdf_parse(filePath)
                 t2 = time.time()
 
                 #print("Time for .pdf file " + filePath + ": " + str(t2 - t1))
@@ -350,7 +350,7 @@ class FileSearch:
                 return x
             else:
                 t1 = time.time()
-                x = self._NonsupportedParse(filePath)
+                x = self._nonsupported_parse(filePath)
                 t2 = time.time()
 
                 #print("Time for other file " + filePath + ": " + str(t2 - t1))
@@ -359,9 +359,9 @@ class FileSearch:
 
         list = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-            future_parses = {executor.submit(downloadAndParse, file[0], file[1], file[2]): file for file in fileParseType}
-            for future in concurrent.futures.as_completed(future_parses):
-                meta = future_parses[future]
+            futureDownloads = {executor.submit(download_and_parse, file[0], file[1], file[2]): file for file in fileParseType}
+            for future in concurrent.futures.as_completed(futureDownloads):
+                meta = futureDownloads[future]
                 try:
                     return_data = future.result()
                     data = (return_data, meta[2])
@@ -378,11 +378,11 @@ class FileSearch:
         #Resorts list to follow the original index, for BagOfWords
         list.sort(key=lambda tup: tup[1])
 
-        data_only_list = []
+        dataList = []
         for element in list:
-            data_only_list.append(element[0])
+            dataList.append(element[0])
 
-        return BagOfWords.find_accurate_docs(fileList, data_only_list, keywords)
+        return BagOfWords.find_accurate_docs(fileList, dataList, keywords)
 
     def __init__(self, dropboxBot): 
         self.dropboxBot = dropboxBot

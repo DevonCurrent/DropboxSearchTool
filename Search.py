@@ -88,8 +88,7 @@ class Search:
             return fs.Search(fileList, self, 1)
         else:
             return fs.Search(fileList, self, 0)
-
-    
+            
 
     def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):
         links = []

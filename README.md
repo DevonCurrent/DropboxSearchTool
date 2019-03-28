@@ -20,7 +20,7 @@ A server is needed to host the Slack bot that interacts with messages, and to ho
 #### Iteration 2
 - I want to be able to ask the Slack bot for help where it explains the options for using this search tool.
 - As a session leader, I want to message the bot '-fc money' to receive a list of all files that contain 'money' inside of the file's content.
-- I want to be able to use '-kn keyword' or -'kf keyword' to search for a keyword by the file's name or content.
+- I want to be able to use '-fn keyword' or -'fc keyword' to search for a keyword by the file's name or content.
 - When I message the bot for files, I want to be able to access the most recent file that contained a given keyword.
 - I want to be able to search through Dropbox for PDF, Excel, Word, PPT, and other Microsoft files by content and file name.
 - I want the keywords to be weighted based on either training data, or by the amount of syllables in the word.
@@ -29,8 +29,14 @@ A server is needed to host the Slack bot that interacts with messages, and to ho
 
 ### Iteration 3
 - We need to help Tim decide on the functionality he wants in the project: filename search, file content search, file content and name search, or all of these search options.
-- Test a search feature where it will return the top 5 most accurate file name, and the top 5 most accurate file content at the same time.
+- When I type in the Slack query "-r", I expect to see the top N most recent files that have been created/changed on dropbox
+- I want FileSearches to be able to search for files weighted by both their name and content.
+- When I type in the Slack query "-f money -t doc ppt" I want to be able to search for files related to 'money' that are only of the file types 'doc' or 'ppt'
+- I want to be able to search through Dropbox files as quickly as possible, since there are many files to potentially search through
 
 ### Future User Stories
 - We need to guarantee that this search tool will work on its intended server and TDG's Dropbox.
+- When I run on an Apple or Windows OS, I expect to be able to easily install this tool with instructions to follow.
+- If I am stuck and do not understand how to use this tool, I can refer to documentation that explains the functionality.
 - We need to perform external testing in TDG if possible to gain feedback.
+- The structure of a search query made on Slack must be less specific to years/companies. It should be able to search through folders by name.

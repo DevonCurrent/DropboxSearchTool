@@ -42,3 +42,7 @@ class FileNameSearch:
         keywords = ' '.join(search.keywords)
 
         return BagOfWords.find_accurate_docs(fileList, fileNameList, keywords)
+
+    
+    def __init__(self, dropboxBot): 
+        self.dropboxBot = dropboxBot

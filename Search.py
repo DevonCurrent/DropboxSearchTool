@@ -1,4 +1,6 @@
 import FileSearch
+import FileNameSearch
+import FileContentSearch
 
 from RecentFileSearch import RecentFileSearch
 from RelevantFileList import RelevantFileList
@@ -80,14 +82,15 @@ class Search:
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
 
-        fs = FileSearch.FileSearch(dropboxBot)
-
         if self.fc == True:
-            return fs.Search(fileList, self, 0)
+            fcs = FileContentSearch.FileContentSearch(dropboxBot)
+            return fcs.file_content_search(fileList, self)
         elif self.fn == True:
-            return fs.Search(fileList, self, 1)
+            fns = FileNameSearch.FileNameSearch(dropboxBot)
+            return fns.file_name_search(fileList, self)
         else:
-            return fs.Search(fileList, self, 0)
+            fs = FileSearch.FileSearch(dropboxBot)
+            return fs.file_search(fileList, self)
 
 
     def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):

@@ -1,10 +1,21 @@
-import tika
-from tika import parser
+from ContentParser import ContentParser
 from BagOfWords import BagOfWords
 import pdb
+
 import dropbox
+from dropbox.exceptions import AuthError
 
 from io import BytesIO
+import tempfile
+from docx import Document
+from pptx import Presentation
+import openpyxl
+import PyPDF2
+from subprocess import check_output
+
+import time
+
+import concurrent.futures
 
 class FileContentSearch:
     """
@@ -16,16 +27,8 @@ class FileContentSearch:
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
     """
-
-    def __init__(self):
-        """
-        Initilizes the tiki VM server.
-
-        This is the slowest portion of the search, so only doing it once will speed everything up considerably
-        """
-        tika.initVM()
     
-    def file_content_search(self, dropboxBot, fileList, search):
+    def file_content_search(self, fileList, search):
         """
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
@@ -44,19 +47,35 @@ class FileContentSearch:
         accurateDocList
             The list of files that are most accurate to the search that the Slack user requested.
         """
-        contentList = []
-
-        for files in fileList:
-            metadata, resp = dropboxBot.dbx.files_download(files.path_display)
-            
-            #Currently not using the metadata
-            del metadata
-
-            stream = BytesIO(resp.content)
-            parsed = parser.from_buffer(stream)
-            docString = parsed["content"].lower()
-            contentList.append(docString)
+    
+        total1 = time.time()
         
+        futureParsedList = []
+
+        for index, file in enumerate(fileList, start=0):
+            filePath = file.path_display
+            fileType = file.name.split('.')[-1]
+            data = (fileType, filePath, index)
+            futureParsedList.append(data)
+
+        contentParser = ContentParser(self.dropboxBot)
+        list = contentParser.parse_file_list(futureParsedList)
+        
+        total2 = time.time()
+
+        print("Total parse time for " + str(len(fileList)) + " files: " + str(total2 - total1))
+
         keywords = ' '.join(search.keywords)
 
-        return BagOfWords.find_accurate_docs(fileList, contentList, keywords)
+        #Resorts list to follow the original index, for BagOfWords
+        list.sort(key=lambda tup: tup[1])
+
+        dataList = []
+        for element in list:
+            dataList.append(element[0])
+
+        return BagOfWords.find_accurate_docs(fileList, dataList, keywords)
+
+
+    def __init__(self, dropboxBot): 
+        self.dropboxBot = dropboxBot

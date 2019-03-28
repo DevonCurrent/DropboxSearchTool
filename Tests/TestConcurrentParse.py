@@ -1,38 +1,26 @@
 import unittest
 import warnings
-
+import sys, os
 import concurrent.futures
 
+runPath = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(runPath, ".."))
+
+from ContentParser import ContentParser
 from FileSearch import FileSearch
 from DropboxBot import DropboxBot
 
 class TestFileContentSearch(unittest.TestCase):
 
     def test_concurrent(self):
-        Files = [('doc','/2014/Google/SRS4.doc'), ('docx', '/2014/Google/coolmoney.docx'), ('pptx','/2014/Google/powertest.pptx')]
+        futureParsedList = [('docx', '/2018/Dell/Money.docx', 0), ('pptx','/2014/Google/powertest.pptx', 1)]
 
         dropboxBot = DropboxBot()
 
-        def download_and_parse(fileType, filePath):
-            return [("Path: " + str(filePath)), ("Type: " + str(fileType)), ('')]
+        contentParser = ContentParser(dropboxBot)
+        dataList = contentParser.parse_file_list(futureParsedList)
 
-
-        dataList = []
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            futureDownloads = {executor.submit(download_and_parse, file[0], file[1]): file for file in Files}
-            for future in concurrent.futures.as_completed(futureDownloads):
-                url = futureDownloads[future]
-                try:
-                    data = future.result()
-                    dataList.append(data)
-                except Exception as exc:
-                    print('%r generated an exception: %s' % (url, exc))
-                #else:
-                    #print('%r page is %d bytes' % (url, len(data)))
-
-        for data in dataList:
-            for d in data:
-                print(d)
+        self.assertEqual(dataList[0][0], "money money money money money\ni love money")
 
 if __name__ == "__main__":
     unittest.main()

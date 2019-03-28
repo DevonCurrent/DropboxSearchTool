@@ -215,23 +215,23 @@ class ContentParser:
 
 
     def _determine_parser(self, fileType, filePath, index):
-    """
-    Determines how to parse a given file based on its type that is shown
+        """
+        Determines how to parse a given file based on its type that is shown
 
-    Parameters
-    ----------
-    fileType : string
-        the type of file (extension)
-    filePath : string
-        the path of the file so it can be downloaded for parsing
-    index : int
-        the index to maintain the position within multiple threads. Not used within this class, 
-        but is passed to keep the order for BagOfWords
-    Returns
-    -------
-    content : string
-        the content of a file
-    """
+        Parameters
+        ----------
+        fileType : string
+            the type of file (extension)
+        filePath : string
+            the path of the file so it can be downloaded for parsing
+        index : int
+            the index to maintain the position within multiple threads. Not used within this class, 
+            but is passed to keep the order for BagOfWords
+        Returns
+        -------
+        content : string
+            the content of a file
+        """
         if (fileType == 'doc'):
             t1 = time.time()
             content = self._doc_parse(filePath)
@@ -283,19 +283,19 @@ class ContentParser:
 
 
     def parse_file_list(self, futureParsedList):
-    """
-    Parses a list of files using multithreading for speed
+        """
+        Parses a list of files using multithreading for speed
 
-    Parameters
-    ----------
-    futureParsedList : tuple
-        a list of tuples containing the type of file (extension), the file path for downloading the file,
-        and the index to maintaing the position of the file within concurrency
-    Returns
-    -------
-    list : string
-        the list of each file's content to be used for finding the accuracy of the files to the query of the user
-    """
+        Parameters
+        ----------
+        futureParsedList : tuple
+            a list of tuples containing the type of file (extension), the file path for downloading the file,
+            and the index to maintaing the position of the file within concurrency
+        Returns
+        -------
+        list : string
+            the list of each file's content to be used for finding the accuracy of the files to the query of the user
+        """
         list = []
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:

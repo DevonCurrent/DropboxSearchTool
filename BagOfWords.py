@@ -95,30 +95,32 @@ class BagOfWords:
             A list of each file's distance. Each file's distance is the accuracy of the file's content or name to
             that of the Slack search query of the user
         """
-        
-
-        #StemmedCountVectorizer creates a 2d array of word counts for each file            
-        vectorizer = StemmedCountVectorizer(min_df=1) #can add "stop_words='english'" to remove common english words
-        
-        trainVectors = vectorizer.fit_transform(fileWordList)
-        numSamples, numFeatures = trainVectors.shape
-
-        # the keywords the session leader wants to find in Dropbox
-        keywordsVec = vectorizer.transform([keywords])
-
         distList = []
-        for i in range(0, numSamples):
-            if fileWordList[i] == keywords:
-                continue
-            fileWordList_vec = trainVectors.getrow(i)
-            d = BagOfWords.dist_norm(fileWordList_vec, keywordsVec)   
-            distList.append(d)
+        try:
+            #StemmedCountVectorizer creates a 2d array of word counts for each file            
+            vectorizer = StemmedCountVectorizer(min_df=1) #can add "stop_words='english'" to remove common english words
         
-        BagOfWords.normalize(distList) # normalizes the distList so that we can choose what accuracy threshold to return to user
+            trainVectors = vectorizer.fit_transform(fileWordList)
+            numSamples, numFeatures = trainVectors.shape
 
-        """
-        for i in range(0, numSamples):
-            print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[i], fileWordList[i]))
-        """
+            # the keywords the session leader wants to find in Dropbox
+            keywordsVec = vectorizer.transform([keywords])
+            
+            for i in range(0, numSamples):
+                if fileWordList[i] == keywords:
+                    continue
+                fileWordList_vec = trainVectors.getrow(i)
+                d = BagOfWords.dist_norm(fileWordList_vec, keywordsVec)   
+                distList.append(d)
+            
+            BagOfWords.normalize(distList) # normalizes the distList so that we can choose what accuracy threshold to return to user
+
+            """
+            for i in range(0, numSamples):
+                print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[i], fileWordList[i]))
+            """
+
+        except Exception as exc:
+            print('generated an exception: %s' % exc)
 
         return distList

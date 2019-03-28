@@ -62,31 +62,33 @@ class Search:
 
 
     def _retrieve_best_docs(self, distList, fileList):
-    """
-    Uses the list of distances of files to find the N most accurate files. Will return the list of
-    documents that are the most accurate using the distList.
+        """
+        Uses the list of distances of files to find the N most accurate files. Will return the list of
+        documents that are the most accurate using the distList.
 
-    Parameters
-    ----------
-    distList : list
-        A list of each file's distance. Each file's distance is the accuracy of the file's content or name to
-        that of the Slack search query of the user
-    fileList : list
-        List of files that can be used to return links for the user. This list is in the same order that distList
-        orders files. distList can use this list to retrieve the files that are most accurate.
+        Parameters
+        ----------
+        distList : list
+            A list of each file's distance. Each file's distance is the accuracy of the file's content or name to
+            that of the Slack search query of the user
+        fileList : list
+            List of files that can be used to return links for the user. This list is in the same order that distList
+            orders files. distList can use this list to retrieve the files that are most accurate.
 
-    Returns
-    -------
-    bestDocs : list
-        The list of N documents that are most accurate to what the user requested found on Dropbox
-    """
-        bestDocs = []
-        for i in range(0, self.RETURN_SIZE):
-            doc = distList.index(min(distList))
-            if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
-                bestDocs.append(fileList[doc])
-                distList[doc] = sys.maxsize # prevent file from being chosen twice
-
+        Returns
+        -------
+        bestDocs : list
+            The list of N documents that are most accurate to what the user requested found on Dropbox
+        """
+        try:
+            bestDocs = []
+            for i in range(0, self.RETURN_SIZE):
+                doc = distList.index(min(distList))
+                if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
+                    bestDocs.append(fileList[doc])
+                    distList[doc] = sys.maxsize # prevent file from being chosen twice
+        except Exception as exc:
+            print('generated an exception: %s' % exc)
         return bestDocs
 
 

@@ -15,25 +15,7 @@ from subprocess import check_output
 import time
 
 import concurrent.futures
-"""
-        Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
-        BagOfWords to find the most accurate searches.'
 
-        Parameters
-        ----------
-        dropboxBot : class 'DropboxBot.DropboxBot'
-            an instance of DropboxBot that has access to the Dropbox account
-        fileList : list
-            A list of files found on the Dropbox that are located in the specified companies and year fields.
-        search : class 'Search.Search'
-            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
-        type : 0 for content search, 1 for name search
-        
-        Returns
-        -------
-        accurateDocList
-            The list of files that are most accurate to the search that the Slack user requested.
-        """
 class FileSearch:
     """
     Class used to represent the file search

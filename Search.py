@@ -91,6 +91,20 @@ class Search:
 
 
     def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):
+        """
+        Gathers a list of hyperlinks for the dropbox files that have been returned
+
+        Parameters
+        ----------
+        dropboxBot : class 'DropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+        bestDocFileList
+            The formatted list that is best the result of the search
+        Returns
+        -------
+        links
+            List of links for dropbox files
+        """
         links = []
         for file in bestDocFileList:
             path = file.path_display

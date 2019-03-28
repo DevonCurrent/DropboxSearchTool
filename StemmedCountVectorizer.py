@@ -13,6 +13,14 @@ class StemmedCountVectorizer(CountVectorizer):
         builds the english analyzer
     """
     def build_analyzer(self):
+        """
+        builds the english analyzer
+
+        Returns
+        -------
+        lambda doc: (english_stemmer.stem(w) for w in analyzer(doc))
+            the english analyzer for the doc
+        """
         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
 
         return lambda doc: (english_stemmer.stem(w) for w in analyzer(doc))

@@ -123,7 +123,7 @@ class FileSearch:
 
     def _doc_parse(self, filename):
         """
-    Parses through Docx Files
+    Parses through Doc Files
 
     Parameters
     ----------

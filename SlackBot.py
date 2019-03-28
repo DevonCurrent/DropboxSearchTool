@@ -17,7 +17,7 @@ class SlackBot:
     listen_for_message(self)
         listens for a message sent by a user
     send_slack_message(self, message)
-        sends the message a user inputs
+        sends the message necessary back to the user
     """
     def __init__(self):
         slackToken = open("DropboxSearchTokens.txt").readline().rstrip()
@@ -32,16 +32,33 @@ class SlackBot:
         print("Connection established with Slack")
         
         #found where to put the greeting, not sure how to make it so the bot says it to the user
-        greeting="If you need to search for files start a direct message with me and use the following commands: \n -k for a specific keyword. \n -kn for a file's name. \n -kc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+        greeting="If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
         self.slackClient.api_call('chat.postMessage', channel='#general', text=greeting)
 
     def listen_for_message(self):
+        """
+        listens for a message sent by a user
+
+        Returns
+        -------
+        message
+            the message initialized with this information
+        """
         for event in self.slackClient.rtm_read():
             if event["type"] == "message" and not "subtype" in event:
                 message = Message(event["text"], event["user"], event["client_msg_id"], event["channel"])
                 return message
 
     def send_slack_message(self, message):
+        """
+        sends the message necessary back to the user
+
+        Parameters
+        ----------
+        message: string
+            message that is entered by the user
+
+        """
         self.slackClient.api_call(
             "chat.postMessage",
             channel=message.channel,

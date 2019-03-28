@@ -69,7 +69,7 @@ class ContentParser:
 
     def _doc_parse(self, filename):
         """
-    Parses through Docx Files
+    Parses through Doc Files
 
     Parameters
     ----------

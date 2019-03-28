@@ -8,7 +8,19 @@ class RecentFileSearch:
         returns the the 5 most recently edited file in the dropbox
     """
     def recent_file_search(dropboxBot):
+        """
+        returns the the 5 most recently edited file in the dropbox
 
+        Parameters
+        ----------
+        dropboxBot : class 'DropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+
+        Returns
+        -------
+        mostRecentFiles
+            List of most recently edited files
+        """
         NUM_FILES = 5
         dbx = dropboxBot.dbx
         mostRecentFiles = []

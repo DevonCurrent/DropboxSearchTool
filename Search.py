@@ -71,7 +71,7 @@ class Search:
         """
 
         if(self.help):
-            return "If you need to search for files start a direct message with me and use the following commands: \n -f for a specific keyword. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+            return "If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
 
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)
@@ -94,6 +94,20 @@ class Search:
 
 
     def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):
+        """
+        Gathers a list of hyperlinks for the dropbox files that have been returned
+
+        Parameters
+        ----------
+        dropboxBot : class 'DropboxBot.DropboxBot'
+            an instance of DropboxBot that has access to the Dropbox account
+        bestDocFileList
+            The formatted list that is best the result of the search
+        Returns
+        -------
+        links
+            List of links for dropbox files
+        """
         links = []
         for file in bestDocFileList:
             path = file.path_display

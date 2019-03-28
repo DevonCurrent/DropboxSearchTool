@@ -9,13 +9,26 @@ import pdb
     Methods
     -----
     split_search_terms(search, value, letter)
-        splits the enterns search terms based on the different key words
+        splits the entered search terms based on the different key words
     parse_message(dropboxBot, message)
         Parses a message to create a Search object that can be used to determine the correct search algorithm
         to find the appropriate file.
 """
 
 def split_search_terms(search, value, letter):
+        """
+        splits the entered search terms based on the different key words
+
+        Parameters
+        ----------
+        search: string
+            the search entered by the user
+        value: string
+            value of the tag
+        letter: letter
+            tag used to differentiate the search
+
+        """
         separated_keywords = value.split(" ")
         separated_keywords = [term.lower() for term in separated_keywords]
         for i in range(1, len(separated_keywords)):

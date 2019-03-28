@@ -17,7 +17,6 @@ import time
 
 import concurrent.futures
 
-
 class FileSearch:
     """
     Class used to represent the file search

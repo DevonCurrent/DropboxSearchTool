@@ -25,9 +25,9 @@ class Search:
         keyword for file type
     help: boolean
         keyword for help
-    kn: boolean
+    fn: boolean
         keyword for file name
-    kf: boolean
+    fc: boolean
         keyword for file content
     -----
     Methods
@@ -47,8 +47,8 @@ class Search:
         self.recentFileSearch = False
         self.fileTypeSearch = False
         self.help = False
-        self.kn = False
-        self.kf = False
+        self.fn = False
+        self.fc = False
 
     def dropbox_search(self, dropboxBot):
         """
@@ -69,26 +69,26 @@ class Search:
         """
 
         if(self.help):
-            return "If you need to search for files start a direct message with me and use the following commands: \n -k for a specific keyword. \n -kn for a file's name. \n -kc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+            return "If you need to search for files start a direct message with me and use the following commands: \n -f for a specific keyword. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
 
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)
 
         #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
         elif(self.keywords == []):
-            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -k cool -y 2014* -c google* where * is optional. If you need help please enter -h."
+            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -f cool -y 2014* -c google* where * is optional. If you need help please enter -h."
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
 
         fs = FileSearch.FileSearch(dropboxBot)
 
-        if self.kf == True:
+        if self.fc == True:
             return fs.Search(fileList, self, 0)
-        elif self.kn == True:
+        elif self.fn == True:
             return fs.Search(fileList, self, 1)
         else:
             return fs.Search(fileList, self, 0)
-            
+
 
     def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):
         links = []

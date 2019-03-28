@@ -19,7 +19,7 @@ def split_search_terms(search, value, letter):
         separated_keywords = value.split(" ")
         separated_keywords = [term.lower() for term in separated_keywords]
         for i in range(1, len(separated_keywords)):
-            if letter is 'k':
+            if letter is 'f':
                 search.keywords.append(separated_keywords[i])
             elif letter is 'c':
                 search.companies.append(separated_keywords[i])
@@ -30,7 +30,7 @@ def split_search_terms(search, value, letter):
                     separated_keywords[i] = separated_keywords[i].split(".")[1]
                 search.types.append(separated_keywords[i])
 
-        if letter is 'k':
+        if letter is 'f':
             if '' in search.keywords:  # removes blank space at the end of a search
                 search.keywords.remove('')
         elif letter is 'c':
@@ -69,12 +69,12 @@ def parse_message(dropboxBot, message):
     
     for value in delimitedSearch:
         if value:
-            if value[0] == 'k':
-                split_search_terms(search, value, 'k')
+            if value[0] == 'f':
+                split_search_terms(search, value, 'f')
                 if value[1] == 'n':
-                    search.kn = True
-                elif value[1] == 'f':
-                    search.kf = True
+                    search.fn = True
+                elif value[1] == 'c':
+                    search.fc = True
 
             elif value[0] == 'c':
                 split_search_terms(search, value, 'c')

@@ -36,6 +36,9 @@ class Search:
     -----
     Methods
     -----
+    _retrieve_best_docs(self, distList, fileList)
+        Uses the list of distances of files to find the N most accurate files. Will return the list of
+        documents that are the most accurate using the distList.
     dropbox_search(self, dropboxBot, fileSearch)
         A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
         search algorithm, or return a message to the user.
@@ -59,6 +62,24 @@ class Search:
 
 
     def _retrieve_best_docs(self, distList, fileList):
+    """
+    Uses the list of distances of files to find the N most accurate files. Will return the list of
+    documents that are the most accurate using the distList.
+
+    Parameters
+    ----------
+    distList : list
+        A list of each file's distance. Each file's distance is the accuracy of the file's content or name to
+        that of the Slack search query of the user
+    fileList : list
+        List of files that can be used to return links for the user. This list is in the same order that distList
+        orders files. distList can use this list to retrieve the files that are most accurate.
+
+    Returns
+    -------
+    bestDocs : list
+        The list of N documents that are most accurate to what the user requested found on Dropbox
+    """
         bestDocs = []
         for i in range(0, self.RETURN_SIZE):
             doc = distList.index(min(distList))

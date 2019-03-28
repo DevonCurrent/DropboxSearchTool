@@ -215,57 +215,87 @@ class ContentParser:
 
 
     def _determine_parser(self, fileType, filePath, index):
+    """
+    Determines how to parse a given file based on its type that is shown
+
+    Parameters
+    ----------
+    fileType : string
+        the type of file (extension)
+    filePath : string
+        the path of the file so it can be downloaded for parsing
+    index : int
+        the index to maintain the position within multiple threads. Not used within this class, 
+        but is passed to keep the order for BagOfWords
+    Returns
+    -------
+    content : string
+        the content of a file
+    """
         if (fileType == 'doc'):
             t1 = time.time()
-            x = self._doc_parse(filePath)
+            content = self._doc_parse(filePath)
             t2 = time.time()
 
             #print("Time for .doc file " + filePath + ": " + str(t2 - t1))
             
-            return x
+            return content
         elif (fileType == 'docx'):
             t1 = time.time()
-            x = self._docx_parse(filePath)
+            content = self._docx_parse(filePath)
             t2 = time.time()
 
             #print("Time for .docx file " + filePath + ": " + str(t2 - t1))
             
-            return x
+            return content
         elif (fileType == 'pptx'):
             t1 = time.time()
-            x = self._pptx_parse(filePath)
+            content = self._pptx_parse(filePath)
             t2 = time.time()
 
             #print("Time for .pptx file " + filePath + ": " + str(t2 - t1))
             
-            return x
+            return content
         elif (fileType == 'xlsx'):
             t1 = time.time()
-            x = self._xlsx_parse(filePath)
+            content = self._xlsx_parse(filePath)
             t2 = time.time()
 
             #print("Time for .Xlsx file " + filePath + ": " + str(t2 - t1))
             
-            return x
+            return content
         elif (fileType == 'pdf'):
             t1 = time.time()
-            x = self._pdf_parse(filePath)
+            content = self._pdf_parse(filePath)
             t2 = time.time()
 
             #print("Time for .pdf file " + filePath + ": " + str(t2 - t1))
             
-            return x
+            return content
         else:
             t1 = time.time()
-            x = self._nonsupported_parse(filePath)
+            content = self._nonsupported_parse(filePath)
             t2 = time.time()
 
             #print("Time for other file " + filePath + ": " + str(t2 - t1))
             
-            return x
+            return content
 
 
     def parse_file_list(self, futureParsedList):
+    """
+    Parses a list of files using multithreading for speed
+
+    Parameters
+    ----------
+    futureParsedList : tuple
+        a list of tuples containing the type of file (extension), the file path for downloading the file,
+        and the index to maintaing the position of the file within concurrency
+    Returns
+    -------
+    list : string
+        the list of each file's content to be used for finding the accuracy of the files to the query of the user
+    """
         list = []
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:

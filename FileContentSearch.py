@@ -44,8 +44,9 @@ class FileContentSearch:
 
         Returns
         -------
-        accurateDocList
-            The list of files that are most accurate to the search that the Slack user requested.
+        distList
+            A list of each file's distance. Each file's distance is the accuracy of the file's content to
+            that of the Slack search query of the user
         """
     
         total1 = time.time()

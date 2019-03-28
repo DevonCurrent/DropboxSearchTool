@@ -91,8 +91,9 @@ class BagOfWords:
 
         Returns
         -------
-        bestDocs
-            The list of files that are most accurate to the search that the Slack user requested.
+        distList
+            A list of each file's distance. Each file's distance is the accuracy of the file's content or name to
+            that of the Slack search query of the user
         """
         
 
@@ -121,20 +122,3 @@ class BagOfWords:
         """
 
         return distList
-
-        """
-        bestDocs = []
-        #selects only the files that have smallest distance
-        #print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
-        for i in range(0, RETURN_SIZE):
-            doc = distList.index(min(distList))
-            #print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[doc], fileWordList[doc]))
-            if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
-                bestDocs.append(fileList[doc])
-                distList[doc] = sys.maxsize # prevent file from being chosen twice
-
-        
-        #print("--- %s seconds ---" % (time.time() - startTime))
-
-        return bestDocs
-        """

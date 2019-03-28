@@ -27,8 +27,10 @@ A server is needed to host the Slack bot that interacts with messages, and to ho
 - When I search for the keyword 'running', I want the keyword to be broken down to it's root when searching (ex: run) so that the search accuracy will be higher and more files can be found that match.
 - I want to have an option to search for files based on both their name and their content weighted together.
 
-### Future User Stories
+### Iteration 3
 - We need to help Tim decide on the functionality he wants in the project: filename search, file content search, file content and name search, or all of these search options.
 - Test a search feature where it will return the top 5 most accurate file name, and the top 5 most accurate file content at the same time.
+
+### Future User Stories
 - We need to guarantee that this search tool will work on its intended server and TDG's Dropbox.
 - We need to perform external testing in TDG if possible to gain feedback.

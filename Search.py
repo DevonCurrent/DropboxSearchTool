@@ -69,7 +69,7 @@ class Search:
         """
 
         if(self.help):
-            return "If you need to search for files start a direct message with me and use the following commands: \n -f for a specific keyword. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+            return "If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
 
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)

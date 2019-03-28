@@ -1,21 +1,11 @@
 from ContentParser import ContentParser
 from BagOfWords import BagOfWords
+from FileContentSearch import FileContentSearch
+from FileNameSearch import FileNameSearch
 import pdb
 
 import dropbox
 from dropbox.exceptions import AuthError
-
-from io import BytesIO
-import tempfile
-from docx import Document
-from pptx import Presentation
-import openpyxl
-import PyPDF2
-from subprocess import check_output
-
-import time
-
-import concurrent.futures
 
 class FileSearch:
     """
@@ -47,33 +37,18 @@ class FileSearch:
         The most accurate documents based on the BagOfWords class
         
     """
-        total1 = time.time()
+
+        fns = FileNameSearch(self.dropboxBot)
+        fcs = FileContentSearch(self.dropboxBot)
+
+        nameDistList = fns.file_name_search(fileList, search)
+        contentDistList = fcs.file_content_search(fileList, search)
+
+        combinedDistList = [1] * len(contentDistList)
+        for i in range(len(contentDistList)):
+            combinedDistList[i] = (contentDistList[i] + nameDistList[i])/2
         
-        futureParsedList = []
-
-        for index, file in enumerate(fileList, start=0):
-            filePath = file.path_display
-            fileType = file.name.split('.')[-1]
-            data = (fileType, filePath, index)
-            futureParsedList.append(data)
-
-        contentParser = ContentParser(self.dropboxBot)
-        list = contentParser.parse_file_list(futureParsedList)
-        
-        total2 = time.time()
-
-        print("Total parse time for " + str(len(fileList)) + " files: " + str(total2 - total1))
-
-        keywords = ' '.join(search.keywords)
-
-        #Resorts list to follow the original index, for BagOfWords
-        list.sort(key=lambda tup: tup[1])
-
-        dataList = []
-        for element in list:
-            dataList.append(element[0])
-
-        return BagOfWords.find_accurate_docs(fileList, dataList, keywords)
+        return combinedDistList
 
 
     def __init__(self, dropboxBot): 

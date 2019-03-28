@@ -5,6 +5,8 @@ import FileContentSearch
 from RecentFileSearch import RecentFileSearch
 from RelevantFileList import RelevantFileList
 
+import sys
+
 
 class Search:
     """
@@ -40,6 +42,8 @@ class Search:
     retrieve_hyperlink_list(self, dropboxBot, bestDocFileList)
         Gathers the hyperlinks to the files that have been found matching the input
     """
+    
+    RETURN_SIZE = 5
 
     def __init__(self):
         self.keywords = []
@@ -51,6 +55,19 @@ class Search:
         self.help = False
         self.fn = False
         self.fc = False
+        
+
+
+    def _retrieve_best_docs(self, distList, fileList):
+        bestDocs = []
+        for i in range(0, self.RETURN_SIZE):
+            doc = distList.index(min(distList))
+            if(distList[doc] < 0.90): # if it is higher than this, the file probably is not related at all to user search
+                bestDocs.append(fileList[doc])
+                distList[doc] = sys.maxsize # prevent file from being chosen twice
+
+        return bestDocs
+
 
     def dropbox_search(self, dropboxBot):
         """
@@ -84,13 +101,16 @@ class Search:
 
         if self.fc == True:
             fcs = FileContentSearch.FileContentSearch(dropboxBot)
-            return fcs.file_content_search(fileList, self)
+            distList = fcs.file_content_search(fileList, self)
+            return self._retrieve_best_docs(distList, fileList)
         elif self.fn == True:
             fns = FileNameSearch.FileNameSearch(dropboxBot)
-            return fns.file_name_search(fileList, self)
+            distList = fns.file_name_search(fileList, self)
+            return self._retrieve_best_docs(distList, fileList)
         else:
             fs = FileSearch.FileSearch(dropboxBot)
-            return fs.file_search(fileList, self)
+            distList = fs.file_search(fileList, self)
+            return self._retrieve_best_docs(distList, fileList)
 
 
     def retrieve_hyperlink_list(self, dropboxBot, bestDocFileList):

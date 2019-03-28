@@ -95,7 +95,6 @@ class BagOfWords:
             The list of files that are most accurate to the search that the Slack user requested.
         """
         
-        RETURN_SIZE = 5
 
         #StemmedCountVectorizer creates a 2d array of word counts for each file            
         vectorizer = StemmedCountVectorizer(min_df=1) #can add "stop_words='english'" to remove common english words
@@ -121,6 +120,9 @@ class BagOfWords:
             print("=== fileWordList %i with dist=%.2f: %s"%(i, distList[i], fileWordList[i]))
         """
 
+        return distList
+
+        """
         bestDocs = []
         #selects only the files that have smallest distance
         #print("TOP " + str(RETURN_SIZE) + " MOST ACCURATE fileWordListS ARE:")
@@ -135,3 +137,4 @@ class BagOfWords:
         #print("--- %s seconds ---" % (time.time() - startTime))
 
         return bestDocs
+        """

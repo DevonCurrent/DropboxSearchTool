@@ -277,8 +277,10 @@ class ContentParser:
                     data = (return_data, meta[2])
                     list.append(data)
                 except Exception as exc:
+                    # this is so FileSearches will maintain the same number of files when comparing name searches and content searches
+                    emptyData = ("", meta[2]) 
+                    list.append(emptyData)
                     print('%r generated an exception: %s' % (meta, exc))
-        
         return list
 
 

@@ -38,8 +38,14 @@ def search_thread(slackBot, dropboxBot, m):
 
     else:
         # This should be sent after it is known that it is a search request and before the search request is done (maybe within Search?)
-        # Should be formatted so that it only displays the chosen options
-        searchConfirm = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
+        # Should be formatted so that it only displays the chosen optionss
+        comp = "\nfrom " + str(search.companies).strip('[]') if search.companies else ""
+        year = "\nfrom the year(s) " + str(search.years).strip('[]') if search.years else ""
+        typeSearch = "\n of the file type(s) " + str(search.types).strip('[]') if search.types else ""
+
+        searchConfirm = "Ok! I will search for " + str(search.keywords).strip('[]') + comp + year + typeSearch
+
+        #searchConfirm = "Ok! I will search for " + str(search.keywords).strip('[]') + " \nfrom " + str(search.companies).strip('[]') + " \nfrom the year(s) " + str(search.years).strip('[]')
         searchConfirmMsg = Message(searchConfirm, m.user, m.msgID, m.channel)
         slackBot.send_slack_message(searchConfirmMsg)
 

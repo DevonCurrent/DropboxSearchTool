@@ -60,6 +60,6 @@ class RelevantFileList:
             entryList = filtered_entryList
 
         for entry in entryList:
-            fileList.append(entry[3])
+            fileList.append(entry[-1])
 
         return fileList

@@ -85,7 +85,8 @@ class Search:
                     bestDocs.append(fileList[doc])
                     distList[doc] = sys.maxsize # prevent file from being chosen twice
         except Exception as exc:
-            print('generated an exception: %s' % exc)
+            pass
+            #print('generated an exception: %s' % exc)
         return bestDocs
 
 

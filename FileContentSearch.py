@@ -48,9 +48,7 @@ class FileContentSearch:
             A list of each file's distance. Each file's distance is the accuracy of the file's content to
             that of the Slack search query of the user
         """
-    
-        total1 = time.time()
-        
+            
         futureParsedList = []
 
         for index, file in enumerate(fileList, start=0):
@@ -62,10 +60,6 @@ class FileContentSearch:
         contentParser = ContentParser(self.dropboxBot)
         list = contentParser.parse_file_list(futureParsedList)
         
-        total2 = time.time()
-
-        print("Total parse time for " + str(len(fileList)) + " files: " + str(total2 - total1))
-
         keywords = ' '.join(search.keywords)
 
         #Resorts list to follow the original index, for BagOfWords

@@ -73,7 +73,6 @@ class BagOfWords:
 
 
     def find_accurate_docs(fileList, fileWordList, keywords):
-        startTime = time.time()
 
         """
         An algorithm that vectorizes the fileList into a 2D array containing the number of instances used of each
@@ -95,6 +94,16 @@ class BagOfWords:
             A list of each file's distance. Each file's distance is the accuracy of the file's content or name to
             that of the Slack search query of the user
         """
+
+        # remove characters that will confuse the algorithm
+        idx = 0
+        for content in fileWordList:
+            fileWordList[idx] = fileWordList[idx].replace("_", " ")
+            fileWordList[idx] = fileWordList[idx].replace(".", " ")
+            fileWordList[idx] = fileWordList[idx].replace(",", " ")
+            fileWordList[idx] = fileWordList[idx].replace("-", " ")
+            idx += 1
+
         distList = []
         try:
             #StemmedCountVectorizer creates a 2d array of word counts for each file            
@@ -121,6 +130,7 @@ class BagOfWords:
             """
 
         except Exception as exc:
-            print('generated an exception: %s' % exc)
+            pass
+            #print('generated an exception: %s' % exc)
 
         return distList

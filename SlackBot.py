@@ -32,7 +32,7 @@ class SlackBot:
         print("Connection established with Slack")
         
         #found where to put the greeting, not sure how to make it so the bot says it to the user
-        greeting="If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+        greeting="If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -l to limit the search to specific folders. \n -t for a file type. \n -r for recently edited files."
         self.slackClient.api_call('chat.postMessage', channel='#general', text=greeting)
 
     def listen_for_message(self):

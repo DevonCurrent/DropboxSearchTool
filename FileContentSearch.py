@@ -40,7 +40,7 @@ class FileContentSearch:
         fileList : list
             A list of files found on the Dropbox that are located in the specified companies and year fields.
         search : class 'Search.Search'
-            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
+            Search object that contains tuples for keywords, specified folders, and specified searches by the Slack user
 
         Returns
         -------

@@ -5,14 +5,6 @@ from DropboxBot import DropboxBot
 import FileSearch
 import threading
 
-"""
-    Main Class used to start the bot and receive searches
-    -----
-    Methods
-    -----
-    search_thread(slackBot, dropboxBot, fileSearch, m)
-        takes search entered and returns the output to the user
-"""
 
 def search_thread(slackBot, dropboxBot, m):
     """
@@ -38,7 +30,7 @@ def search_thread(slackBot, dropboxBot, m):
 
     else:
         # This should be sent after it is known that it is a search request and before the search request is done (maybe within Search?)
-        # Should be formatted so that it only displays the chosen optionss
+        # Should be formatted so that it only displays the chosen options
         folder = "\nfrom the folder(s) " + str(search.folders).strip('[]') if search.folders else ""
         typeSearch = "\n of the file type(s) " + str(search.types).strip('[]') if search.types else ""
 

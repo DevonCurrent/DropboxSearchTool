@@ -33,14 +33,11 @@ class RelevantFileList:
 
         dbx = dropboxBot.dbx
     
-        cFlag = False
-        yFlag = False
+        fFlag = False
         tFlag = False
 
-        if(len(search.companies)>0):
-            cFlag = True
-        if(len(search.years)>0):
-            yFlag = True
+        if(len(search.folders)>0):
+            fFlag = True
         if(len(search.types)>0):
             tFlag = True
 
@@ -58,16 +55,17 @@ class RelevantFileList:
                 path.append(entry) # add file metadata
                 entryList.append(path)
 
-        if yFlag:
-            filtered_entryList = [(year,x,y,z) for (year,x,y,z) in entryList if year in search.years]
-            entryList = filtered_entryList
-        
-        if cFlag:
-            filtered_entryList = [(v,comp,y,z) for (v,comp,y,z) in entryList if comp in search.companies]
+        # looks at all parent folders of a file. Checks to see if one of the folders is related to the folder parameter the user wanted
+        if fFlag:
+            filtered_entryList = []
+            for entry in entryList:
+                for folder in entry[0:-2]:
+                    if(folder in search.folders):
+                        filtered_entryList.append(entry)
             entryList = filtered_entryList
 
         if tFlag:
-            filtered_entryList = [(v,x,types,z) for (v,x,types,z) in entryList if types in search.types]
+            filtered_entryList = [(x,types,z) for (x,types,z) in entryList if types in search.types]
             entryList = filtered_entryList
 
         for entry in entryList:

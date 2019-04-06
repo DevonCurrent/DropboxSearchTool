@@ -50,8 +50,7 @@ class Search:
 
     def __init__(self):
         self.keywords = []
-        self.companies = []
-        self.years = []
+        self.folders = []
         self.types = []
         self.recentFileSearch = False
         self.fileTypeSearch = False

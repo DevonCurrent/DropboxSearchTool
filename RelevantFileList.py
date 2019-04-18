@@ -1,3 +1,4 @@
+import dropbox
 from BagOfWords import BagOfWords
 import pdb
 
@@ -36,12 +37,17 @@ class RelevantFileList:
         fileList = []
 
         for entry in dbx.files_list_folder('',True).entries:
-            if '.' in entry.path_display:
+            if isinstance(entry, dropbox.files.FileMetadata):
+
                 path = entry.path_display.split('/')
 
                 path.pop(0) #removes empty first element
                 path[1] = path[1].lower() # lowercase the company names so they will match search.companies
-                path[-1] = path[-1].split('.')[-1] # last element is file extension (type)
+                
+                pathList = []
+                for path in path[0:-1]:
+                    pathList.append(path)
+                path = [pathList, entry.name.split('.')[-1]]
 
                 path.append(entry) # add file metadata
                 entryList.append(path)
@@ -50,7 +56,7 @@ class RelevantFileList:
         if fFlag:
             filtered_entryList = []
             for entry in entryList:
-                for folder in entry[0:-2]:
+                for folder in entry[0]: #was [0:-2]
                     folder = folder.lower()
                     folder = folder.replace(" ", "_") # possible solution for folders that have spaces in their name. Example: "r8 Folder"
                     if(folder in search.folders):

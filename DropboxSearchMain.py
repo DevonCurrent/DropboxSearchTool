@@ -19,8 +19,6 @@ def search_thread(slackBot, dropboxBot, m):
         m:
             Message instance
     """
-    #time.sleep(600)
-
     search = parse_message(dropboxBot, m)
 
     searchResult = search.dropbox_search(dropboxBot, slackBot, m)

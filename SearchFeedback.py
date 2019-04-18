@@ -21,6 +21,7 @@ class SearchFeedback:
             as well as the user that requested the search.
         """
         percentParsed = 0
+        prevTimestamp = None
         while percentParsed < 100:
             numParsed = ContentParser.numberParsed
             percentParsed = (numParsed/fileListLength)*100
@@ -28,9 +29,21 @@ class SearchFeedback:
             
                 feedbackProgress = "The search is at " + str(int(percentParsed)) + "%"
                 
-                searchConfirmMsg = Message(feedbackProgress, m.user, m.msgID, m.channel)
-                slackBot.send_slack_message(searchConfirmMsg)
+                try:
+                    slackBot.slackClient.api_call(
+                        "chat.delete",
+                        channel=m.channel,
+                        ts=prevTimestamp
+                    )
+                except Exception as exc:
+                    pass
+
+                feedbackMsg = slackBot.slackClient.api_call(
+                    "chat.postMessage",
+                    channel=m.channel,
+                    text=feedbackProgress
+                )
+
+                prevTimestamp = feedbackMsg.get('ts')
             
                 time.sleep(10)
-
-

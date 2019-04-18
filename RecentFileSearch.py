@@ -1,3 +1,5 @@
+import dropbox
+
 class RecentFileSearch:
     """
     Class used to represent the recent files searched
@@ -32,7 +34,7 @@ class RecentFileSearch:
 
             #searches recursively through the entire dropbox beginning at the root
             for entry in dropboxEntries:
-                if "." in entry.path_display:
+                if isinstance(entry, dropbox.files.FileMetadata):
                     timeTuple = entry.client_modified.timetuple()
 
                     if(bestTimeTuple == None):

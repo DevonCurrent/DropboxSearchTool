@@ -8,6 +8,8 @@ from pptx import Presentation
 import openpyxl
 import PyPDF2
 from subprocess import check_output
+from SearchFeedback import SearchFeedback
+import threading
 
 import time
 
@@ -210,7 +212,7 @@ class ContentParser:
 
         for word in splitEntry[:-1]: # there could be more than one '.'
             fileName += word
-
+        
         return fileName
 
 
@@ -289,7 +291,7 @@ class ContentParser:
             return content
 
 
-    def parse_file_list(self, futureParsedList):
+    def parse_file_list(self, futureParsedList, slackBot, m):
         """
         Parses a list of files using multithreading for speed
 
@@ -303,8 +305,13 @@ class ContentParser:
         list : string
             the list of each file's content to be used for finding the accuracy of the files to the query of the user
         """
-        list = []
 
+        #SearchFeedback.search_feedback(self, len(futureParsedList))
+        
+        self.numberParsed = 0
+        threading.Thread(target=SearchFeedback.search_feedback, args=(self, len(futureParsedList), slackBot, m)).start()
+
+        list = []
         
         self.docTime = 0
         self.docxTime = 0
@@ -318,6 +325,7 @@ class ContentParser:
             futureDownloads = {executor.submit(self._determine_parser, file[0], file[1], file[2]): file for file in futureParsedList}
             for future in concurrent.futures.as_completed(futureDownloads):
                 meta = futureDownloads[future]
+                self.numberParsed += 1
                 try:
                     return_data = future.result()
                     data = (return_data, meta[2])

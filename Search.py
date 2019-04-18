@@ -90,7 +90,7 @@ class Search:
         return bestDocs
 
 
-    def dropbox_search(self, dropboxBot):
+    def dropbox_search(self, dropboxBot, slackBot, m):
         """
         A Search object that stores Slack user message metadata, which can then be passed onto the appropriate 
         search algorithm, or return a message to the user.
@@ -122,7 +122,7 @@ class Search:
 
         if self.fc == True:
             fcs = FileContentSearch.FileContentSearch(dropboxBot)
-            distList = fcs.file_content_search(fileList, self)
+            distList = fcs.file_content_search(fileList, self, slackBot, m)
             return self._retrieve_best_docs(distList, fileList)
         elif self.fn == True:
             fns = FileNameSearch.FileNameSearch(dropboxBot)
@@ -130,7 +130,7 @@ class Search:
             return self._retrieve_best_docs(distList, fileList)
         else:
             fs = FileSearch.FileSearch(dropboxBot)
-            distList = fs.file_search(fileList, self)
+            distList = fs.file_search(fileList, self, slackBot, m)
             return self._retrieve_best_docs(distList, fileList)
 
 

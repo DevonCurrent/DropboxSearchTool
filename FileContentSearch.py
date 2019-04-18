@@ -28,7 +28,7 @@ class FileContentSearch:
         BagOfWords to find the most accurate searches.
     """
     
-    def file_content_search(self, fileList, search):
+    def file_content_search(self, fileList, search, slackBot, m):
         """
         Formats the fileList found on Dropbox to a list of each files' content. This is then passed to the 
         BagOfWords to find the most accurate searches.
@@ -58,7 +58,7 @@ class FileContentSearch:
             futureParsedList.append(data)
 
         contentParser = ContentParser(self.dropboxBot)
-        list = contentParser.parse_file_list(futureParsedList)
+        list = contentParser.parse_file_list(futureParsedList, slackBot, m)
         
         keywords = ' '.join(search.keywords)
 

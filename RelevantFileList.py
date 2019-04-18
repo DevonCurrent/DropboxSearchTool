@@ -51,6 +51,8 @@ class RelevantFileList:
             filtered_entryList = []
             for entry in entryList:
                 for folder in entry[0:-2]:
+                    folder = folder.lower()
+                    folder = folder.replace(" ", "_") # possible solution for folders that have spaces in their name. Example: "r8 Folder"
                     if(folder in search.folders):
                         filtered_entryList.append(entry)
             entryList = filtered_entryList

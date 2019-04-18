@@ -4,7 +4,7 @@ from SlackBot import SlackBot
 from DropboxBot import DropboxBot
 import FileSearch
 import threading
-
+import time
 
 def search_thread(slackBot, dropboxBot, m):
     """
@@ -19,10 +19,11 @@ def search_thread(slackBot, dropboxBot, m):
         m:
             Message instance
     """
+    #time.sleep(600)
 
     search = parse_message(dropboxBot, m)
 
-    searchResult = search.dropbox_search(dropboxBot)
+    searchResult = search.dropbox_search(dropboxBot, slackBot, m)
 
     if(type(searchResult) == str):
         resp = Message(searchResult, m.user, m.msgID, m.channel)

@@ -22,7 +22,7 @@ class FileSearch:
     """
 
 
-    def file_search(self, fileList, search):
+    def file_search(self, fileList, search, slackBot, m):
         """
     Searches through the fileList from Dropbox  
 
@@ -47,7 +47,7 @@ class FileSearch:
         nameEndTime = time.time()
 
         contentStartTime = time.time()
-        contentDistList = fcs.file_content_search(fileList, search)
+        contentDistList = fcs.file_content_search(fileList, search, slackBot, m)
         contentEndTime = time.time()
         
         print("_____")

@@ -26,21 +26,21 @@ class TestMessageParsing(unittest.TestCase):
 
 
     def test_parse_companies(self):
-        msg = Message("-k This is a test -c IBM google apple", "N/A", "N/A", "N/A")
+        msg = Message("-f This is a test -l IBM google apple", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
 
-        self.assertEqual(search.companies, ["ibm", "google", "apple"])
+        self.assertEqual(search.folders, ["ibm", "google", "apple"])
 
     
     def test_parse_years(self):
-        msg = Message("-k This is a test -y 2015 2017 2018", "N/A", "N/A", "N/A")
+        msg = Message("-f This is a test -l 2015 2017 2018", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
 
-        self.assertEqual(search.years, ["2015", "2017", "2018"])
+        self.assertEqual(search.folders, ["2015", "2017", "2018"])
 
 
     def test_parse_types(self):
-        msg = Message("-k This is a test -t .pdf docx .doc", "N/A", "N/A", "N/A")
+        msg = Message("-f This is a test -t .pdf docx .doc", "N/A", "N/A", "N/A")
         search = parse_message(dropboxBot, msg)
 
         self.assertEqual(search.types, ["pdf", "docx", "doc"])

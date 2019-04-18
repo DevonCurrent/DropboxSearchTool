@@ -34,10 +34,8 @@ def split_search_terms(search, value, letter):
         for i in range(1, len(separated_keywords)):
             if letter is 'f':
                 search.keywords.append(separated_keywords[i])
-            elif letter is 'c':
-                search.companies.append(separated_keywords[i])
-            elif letter is 'y':
-                search.years.append(separated_keywords[i])
+            elif letter is 'l':
+                search.folders.append(separated_keywords[i])
             elif letter is 't':
                 if(separated_keywords[i].startswith(".")):
                     separated_keywords[i] = separated_keywords[i].split(".")[1]
@@ -46,12 +44,9 @@ def split_search_terms(search, value, letter):
         if letter is 'f':
             if '' in search.keywords:  # removes blank space at the end of a search
                 search.keywords.remove('')
-        elif letter is 'c':
-            if '' in search.companies:  # removes blank space at the end of a search
-                search.companies.remove('')
-        elif letter is 'y':
-            if '' in search.years:  # removes blank space at the end of a search
-                search.years.remove('')
+        elif letter is 'l':
+            if '' in search.folders:  # removes blank space at the end of a search
+                search.folders.remove('')
         elif letter is 't':
             if '' in search.types:  # removes blank space at the end of a search
                 search.types.remove('')
@@ -89,11 +84,8 @@ def parse_message(dropboxBot, message):
                 elif value[1] == 'c':
                     search.fc = True
 
-            elif value[0] == 'c':
-                split_search_terms(search, value, 'c')
-
-            elif value[0] == 'y':
-                split_search_terms(search, value, 'y')
+            elif value[0] == 'l':
+                split_search_terms(search, value, 'l')
 
             elif value[0] == 't':
                 split_search_terms(search, value, 't')

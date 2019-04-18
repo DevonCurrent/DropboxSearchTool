@@ -2,6 +2,7 @@ from ContentParser import ContentParser
 from BagOfWords import BagOfWords
 from FileContentSearch import FileContentSearch
 from FileNameSearch import FileNameSearch
+import time
 import pdb
 
 import dropbox
@@ -30,7 +31,7 @@ class FileSearch:
     fileList : list
             A list of files found on the Dropbox that are located in the specified companies and year fields.
     search : class 'Search.Search'
-            Search object that contains tuples for keywords, companies, years, and specified searches by the Slack user
+            Search object that contains tuples for keywords, specified folders, and specified searches by the Slack user
     Returns
     -------
     BagOfWords.find_accurate_docs(fileList, list, keywords)
@@ -41,8 +42,18 @@ class FileSearch:
         fns = FileNameSearch(self.dropboxBot)
         fcs = FileContentSearch(self.dropboxBot)
 
+        nameStartTime = time.time()
         nameDistList = fns.file_name_search(fileList, search)
+        nameEndTime = time.time()
+
+        contentStartTime = time.time()
         contentDistList = fcs.file_content_search(fileList, search)
+        contentEndTime = time.time()
+        
+        print("_____")
+        print("TIME MATCHING FILENAME LIST TO SEARCH QUERY: " + str(nameEndTime - nameStartTime))
+        print("_____")
+        print("TIME MATCHING FILECONTENT LIST TO SEARCH QUERY: " + str(contentEndTime - contentStartTime))
 
         combinedDistList = [1] * len(contentDistList)
         for i in range(len(contentDistList)):

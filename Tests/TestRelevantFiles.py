@@ -31,7 +31,7 @@ class TestRelevantFiles(unittest.TestCase):
     def test_retrieve_year_files(self):
         search = Search()
         search.keywords = ["money"]
-        search.years = ["2014"]
+        search.folders = ["2014"]
 
         rfl = RelevantFileList.retrieve_relevant_files(dropboxBot, search)
 
@@ -46,8 +46,7 @@ class TestRelevantFiles(unittest.TestCase):
     def test_retreive_comp_files(self):
         search = Search()
         search.keywords = ["money"]
-        search.years = ["2014"]
-        search.companies = ["google"]
+        search.folders = ["2014", "google"]
 
         rfl = RelevantFileList.retrieve_relevant_files(dropboxBot, search)
 
@@ -62,8 +61,7 @@ class TestRelevantFiles(unittest.TestCase):
     def test_retrieve_type_files(self):
         search = Search()
         search.keywords = ["money"]
-        search.years = ["2014"]
-        search.companies = ["google"]
+        search.folders = ["2014", "google"]
         search.types = ["docx"]
 
         rfl = RelevantFileList.retrieve_relevant_files(dropboxBot, search)
@@ -73,22 +71,17 @@ class TestRelevantFiles(unittest.TestCase):
     def test_flags(self):
         search = Search()
 
-        search.companies = ['Google', 'IBM']
-        search.years = ['2014', '2016']
+        search.folders = ['2014', '2016', "google", "IBM"]
         search.keywords = ['key', 'words']
 
-        cFlag = False
-        yFlag = False
+        fFlag = False
 
-        if(len(search.companies)>0):
-            cFlag = True
+        if(len(search.folders)>0):
+            fFlag = True
         
-        if(len(search.years)>0):
-            yFlag = True
+        self.assertEqual(fFlag, True)
 
-        self.assertEqual(cFlag, True)
-        self.assertEqual(yFlag, True)
-
+        """
         fileList = []
         pathList = []
 
@@ -117,6 +110,8 @@ class TestRelevantFiles(unittest.TestCase):
             if path[1] != 'Google':
                 if path[1] != 'IBM':
                     self.fail()
+
+        """
 
 
 if __name__ == "__main__":

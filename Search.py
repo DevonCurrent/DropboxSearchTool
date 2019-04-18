@@ -10,17 +10,15 @@ import sys
 
 class Search:
     """
-    Determines the type of Search to make on Dropbox with the given keywords, companies, and years.
+    Determines the type of Search to make on Dropbox with the given keywords, folders to search through, and file types.
     Handles exceptions such as help (-h), incorrect searches, and having no keywords in a given search.
     -----
     Attributes
     -----
     keywords: str array
         keywords entered 
-    companies: str array
-        companies entered
-    years: str array
-        years entered
+    folders: str array
+        folders entered where files are stored on Dropbox
     types: str array
         file types entered
     recentFileSearch: boolean
@@ -50,8 +48,7 @@ class Search:
 
     def __init__(self):
         self.keywords = []
-        self.companies = []
-        self.years = []
+        self.folders = []
         self.types = []
         self.recentFileSearch = False
         self.fileTypeSearch = False
@@ -88,7 +85,8 @@ class Search:
                     bestDocs.append(fileList[doc])
                     distList[doc] = sys.maxsize # prevent file from being chosen twice
         except Exception as exc:
-            print('generated an exception: %s' % exc)
+            pass
+            #print('generated an exception: %s' % exc)
         return bestDocs
 
 

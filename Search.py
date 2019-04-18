@@ -109,14 +109,14 @@ class Search:
         """
 
         if(self.help):
-            return "If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -c for the company the file was made for. \n -y for the year the file was created. \n -t for a file type. \n -r for recently edited files."
+            return "If you need to search for files on Dropbox, enter the channel I am on (or start a direct message with me) and use the following commands: \n -f to search by file's name and content \n -fn to search by only file names \n -fc to search only by file content. \n -l to search through specific folders. This is optional to include with -f, -fn, or -fc searches. If there is spaces in the folder name, you must replace them with '_' \n -t for a file type. This is optional to include with -f, -fn, or -fc searches. \n -r to search for the most recently edited files. \n\n An example search would be: -f draw your facilitation style -l content_folder facilitation_folder -t pdf doc docx"
 
         elif(self.recentFileSearch):
             return RecentFileSearch.recent_file_search(dropboxBot)
 
         #keywords are needed, or there is no way to know what the user wants to search for. Anything else is optional
         elif(self.keywords == []):
-            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -f cool -y 2014* -c google* where * is optional. If you need help please enter -h."
+            return "Not sure what you mean. Please make sure that you typed it correctly. Example: -f draw your facilitation style -l content_modules -t pdf docx \n The -l and -t will limit the search by specific folder(s) and type(s), and are optional. If you need help please enter -h."
         
         fileList = RelevantFileList.retrieve_relevant_files(dropboxBot, self)
 

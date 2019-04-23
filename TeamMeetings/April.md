@@ -16,3 +16,18 @@ Devon showed group his efficency tests of the program with TDG's full dropbox.
 Discussed inconsistencies with TDG's dropbox naming conventions and how we plan to address them.
 
 Talked about testing our program on a mac, which is the enviornment it will run on at TDG.
+
+
+# April 18th
+### Bracken Library 2nd Floor 4:00pm
+
+Met with The Design Gym to go over this iteration's progress, as well as handoff documentation and the project for deployment/feedback.
+
+Heidi, Tim and TDG's CEO were present for the meeting.
+In the meeting we covered:
+- Discussed this iteration's progress. Improving performance, reliability of the server, generalized the search features to work for any Dropbox, and is able to parse some Files and folder that it wouldn't have been able to before (due to naming conventions like snake_case and CamelCase.
+- Handed over documents and the tool, and led them through how to get started on setting up the DropboxSearchTool
+- Met the CEO of the company, and explained our project and our roles for what we accomplished.
+- Post-mortem was discussed for our group's performance, as well as how our project turned out. Both were met with positive feedback.
+
+We will still need to go over with Tim for setting up the DropboxSearchTool, if any problems arise during the setup process.

@@ -1,4 +1,6 @@
-# How to search Dropbox files on Slack
+# Dropbox Search Tool User Manual
+
+## How to search Dropbox files on Slack
 Dropbox is great for storing files, but it is difficult to search through for the content that you need. This document will go over how to use the Dropbox Search Tool that allows you to search through Dropbox using Slack. This tool uses a bot to communicate with to make searches (similar to making a search on the internet). After making a search query to the bot, the bot will search through Dropbox and find the files that you need.
 
 ### How to message the bot

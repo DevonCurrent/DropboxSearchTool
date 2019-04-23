@@ -28,15 +28,17 @@ A server is needed to host the Slack bot that interacts with messages, and to ho
 - I want to have an option to search for files based on both their name and their content weighted together.
 
 ### Iteration 3
-- We need to help Tim decide on the functionality he wants in the project: filename search, file content search, file content and name search, or all of these search options.
+- I want to be able to make filename search, file content search, or a file content and name search.
 - When I type in the Slack query "-r", I expect to see the top N most recent files that have been created/changed on dropbox
 - I want FileSearches to be able to search for files weighted by both their name and content.
 - When I type in the Slack query "-f money -t doc ppt" I want to be able to search for files related to 'money' that are only of the file types 'doc' or 'ppt'
 - I want to be able to search through Dropbox files as quickly as possible, since there are many files to potentially search through
 
-### Future User Stories
-- We need to guarantee that this search tool will work on its intended server and TDG's Dropbox.
+### Iteration 4
+- I want to be able to run this system without it crashing, or having errors that cause someone to have to restart the server.
+- I want feedback that tells me how much longer I have to wait on a search until I get a result.
+- I want to be able to run this DropboxSearchTool on a MacOS computer, and search through the intended Dropbox from TDG.
 - When I run on an Apple or Windows OS, I expect to be able to easily install this tool with instructions to follow.
+- When future developers take over this project, they should find commented code detailing what each class is doing, as well as developer documentation explaining a hierarchical overview of the code structure.
 - If I am stuck and do not understand how to use this tool, I can refer to documentation that explains the functionality.
-- We need to perform external testing in TDG if possible to gain feedback.
-- The structure of a search query made on Slack must be less specific to years/companies. It should be able to search through folders by name.
+- When I make a search query on Slack, it should be formatted to use '-l' for folders (which are more general), instead of '-c' or '-y' for companies and years (which is too specific).

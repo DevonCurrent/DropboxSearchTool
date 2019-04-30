@@ -31,3 +31,27 @@ In the meeting we covered:
 - Post-mortem was discussed for our group's performance, as well as how our project turned out. Both were met with positive feedback.
 
 We will still need to go over with Tim for setting up the DropboxSearchTool, if any problems arise during the setup process.
+
+# April 23rd
+### Bracken Library 2:00pm
+
+Met with Tim to discuss issues that he had run into with our instillation instructions.
+
+* Ran into issues because of difference in operating systems.
+** Native Python 2 support led to issues with InstallScript using Pip2 not Pip3.
+** Found this issue and fixed install script.
+* Tim was able complete the set-up using the provided documentation once the issue was fixed.
+* Set-up meeting for 4:00pm Wednesday to discuss feedback from TDG, they would be testing it out during the day.
+
+# April 24th
+### Bracken Library 4:00pm
+
+Met with Tim and Heidi to discuss their feedback after deploying the tool at TDG.
+
+* They were the only ones who used the tool during the day.
+** We had hoped to get a blind test, because they had both seen demonstrations.
+** Still good feedback as neither had used the tool yet.
+* Believed it was easy to use.
+* Help function allowed them to understand why some of their queries did not work.
+* Able to find appropriate files with their queries.
+* Okay with how long the searches took.

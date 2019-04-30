@@ -1,0 +1,11 @@
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
+brew install antiword
+
+Pip3.7 install dropbox
+Pip3.7 install slackclient
+Pip3.7 install python-docx
+Pip3.7 install python-pptx
+Pip3.7 install openpyxl
+Pip3.7 install PyPDF2
+Pip3.7 install nltk
+Pip3.7 install sklearn

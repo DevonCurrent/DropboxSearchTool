@@ -55,7 +55,6 @@ class FileContentSearch:
             filePath = file.path_display
             fileType = file.name.split('.')[-1]
             data = (fileType, filePath, index)
-            print(data[1])
             futureParsedList.append(data)
 
         contentParser = ContentParser(self.dropboxBot)

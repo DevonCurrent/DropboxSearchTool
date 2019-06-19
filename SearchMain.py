@@ -57,7 +57,6 @@ def search_thread(slackBot, dropboxBot, m):
 def start_bots(gui, slackToken, dropboxToken):
     slackBot = SlackBot(gui, slackToken)
     dropboxBot = DropboxBot(gui, dropboxToken)
-
     print("The program can now receive search queries")
 
     while True:

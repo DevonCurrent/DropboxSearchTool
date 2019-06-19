@@ -35,7 +35,25 @@ class SlackBot:
         
         #found where to put the greeting, not sure how to make it so the bot says it to the user
         greeting="If you need to search for files start a direct message with me and use the following commands: \n -f for a specific word. \n -fn for a file's name. \n -fc for a file's content. \n -l to limit the search to specific folders. \n -t for a file type. \n -r for recently edited files."
-        self.slackClient.api_call('chat.postMessage', channel='#general', text=greeting)
+
+        try:
+            channels = self.slackClient.api_call("conversations.list").get('channels')
+            for channel in channels:
+                if(channel.get("is_member")):
+                    name = channel.get("name")
+                    self.slackClient.api_call('chat.postMessage', channel='#'+name, text=greeting)
+        except:
+            pass
+        
+        try:
+            privChan = self.slackClient.api_call("conversations.list", types="private_channel").get('channels')
+            for channel in privChan:
+                if(channel.get("is_member")):
+                    name = channel.get("name")
+                    self.slackClient.api_call('chat.postMessage', channel='#'+name, text=greeting)
+        except:
+            pass
+        
 
     def listen_for_message(self):
         """

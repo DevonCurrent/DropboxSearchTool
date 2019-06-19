@@ -1,5 +1,6 @@
 from Message import Message
 from slackclient import SlackClient
+from DropboxSearchTool import DropboxSearchTool
 
 class SlackBot:
     """
@@ -19,15 +20,16 @@ class SlackBot:
     send_slack_message(self, message)
         sends the message necessary back to the user
     """
-    def __init__(self):
-        slackToken = open("DropboxSearchTokens.txt").readline().rstrip()
+    def __init__(self, gui, slackToken):
+        self.slackToken = slackToken
 
-        self.slackClient = SlackClient(slackToken)
+        self.slackClient = SlackClient(self.slackToken)
 
         if not self.slackClient.rtm_connect(with_team_state=False):
+            gui.no_slack_token_found()
             print("Connection could not be established")
             exit()
-        
+
         self.id = self.slackClient.api_call("auth.test")["user_id"]
         print("Connection established with Slack")
         

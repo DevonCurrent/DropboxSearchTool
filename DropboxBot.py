@@ -11,18 +11,14 @@ class DropboxBot:
         dropbox token
     """
 
-    def __init__(self):
-        
-        lines = open("DropboxSearchTokens.txt").readlines()
-        dropboxToken = lines[1].strip()
-
-        self.dbx = dropbox.Dropbox(dropboxToken)
+    def __init__(self, gui, dropboxToken):
 
         try:
+            self.dbx = dropbox.Dropbox(dropboxToken)
             self.dbx.users_get_current_account()
-        except AuthError as err:
-            print(err)
+        except:
             print("ERROR: Invalid access token; try re-generating an access token from the app console on the web.")
+            gui.no_dropbox_token_found()
             exit()
         
         print("Connection established with Dropbox")

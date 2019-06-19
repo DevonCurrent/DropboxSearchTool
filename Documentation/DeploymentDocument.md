@@ -30,7 +30,7 @@
   
 - **Step 8:** Refer to section 2 and Section 3 for how to get the tokens. To start writing to the file, you will need to press the 'i' key to enable writing to the file. You will then copy the Slack Bot token on the first line of this text editor. Then you will copy the Dropbox token onto the second line. When finished with this, you can hit the escape key, then type ':wq' to save and exit the file back to the terminal.
   
-- **Step 9:** When in the DropboxSearchTool folder, type in "python SearchMain.py" This should run the application.
+- **Step 9:** When in the DropboxSearchTool folder, type in "python DropboxSearchTool.py" This should run the application.
   
 - **Step 10:** You can refer to the User documentation on our [Github](https://github.com/DevonCurrent/DropboxSearchTool/blob/master/Documentation/UserDocumentation.md) to know more about using this application. 
   
@@ -64,6 +64,6 @@
 
 - **Step 1:** If it is not currently running, start the DropboxSearchTool. This can be done by going to the terminal (Command + space). You can use [this guide](https://mac.appstorm.net/how-to/utilities-how-to/how-to-use-terminal-the-basics/) to change your directory to wherever the DropboxSearchTool is stored.
 
-- **Step 2:** Once inside the DropboxSearchTool folder, type "python SearchMain.py" and press enter. This should start the search tool.
+- **Step 2:** Once inside the DropboxSearchTool folder, type "python DropboxSearchTool.py" and press enter. This should start the search tool.
 
 - **Step 3:** To stop the search tool from running on the computer, either exit out of the terminal, or press "ctrl + c" to stop the process from running in the terminal.

@@ -3,9 +3,9 @@
 ## The technical aspects of the system
 The source code has some technical aspects, and so it will be explained in full. Each file's documentation goes into more detail, but a general overview of the process will be explained in the order that a search is made by a user:
 
-- SearchMain is the script that starts the server. It restarts the server if it is shut off for any reason.
+- DropboxSearchTool.py is the script that starts the server. It restarts the server if it is shut off for any reason.
   
-- DropboxSearchMain handles each individual thread for searches made by users. This also handles instantiating the Slack bot and Dropbox bot, and returning information back through Slack.
+- SearchMain handles each individual thread for searches made by users. This also handles instantiating the Slack bot and Dropbox bot, and returning information back through Slack.
   
 - DropboxBot and SlackBot are instances of the Dropbox app and Slack bot respectively, that use the tokens provided in DropboxSearchTokens.txt
   
@@ -51,19 +51,19 @@ To create the Dropbox app, follow these instructions:
 
 > When ready to integrate into the actual environment, create another Slack bot and Dropbox app and set them to the real Slack workspace and Dropbox.
 
-Install any other dependencies that the DropboxSearchTool needs to run. Python 3 is required, and so run "python SearchMain.py" to start up the system. If it does not run, check to see what dependencies are missing.
+Install any other dependencies that the DropboxSearchTool needs to run. Python 3 is required, and so run "python DropboxSearchTool.py" to start up the system. If it does not run, check to see what dependencies are missing.
 
 ## Folder structure
 The documentation, presentations, and team meetings were a necessity for our class assignments. The documentation is useful for explaining how to replicate the environments, and how the tool works for users. The tests folder contains unit tests for most of the features.
 
 The source code does not contain much folder structure, as we were originally unsure how to sort through the material by classification. The best structure that we have thought up would be to categorize files in the following structure:
-- "SlackBot", "DropboxBot", "DropboxSearchMain", and "SearchMain" as the initialization of the tool.
+- "SlackBot", "DropboxBot", "DropboxSearchTool", and "SearchMain" as the initialization of the tool.
 - "Message", "ParseMessage", and "RelevantFileList" are the pre-processing files before making a search.
 - "Search", "FileContentSearch", "FileNameSearch", "FileSearch", "ContentParser", and "SearchFeedback" would be the searching portion.
 - "BagOfWords" and "StemmedCountVectorizer" would be stored under a folder for accuracy algorithm.
 
 ## Important files
 
-- SearchMain is used to start the tool. It runs the DropboxSearchMain, and will check to make sure that no unforeseen error will occur that might shut down the system. This is dirty, but was the quick solution to solving the problem at the time, and there have been no known issues since implementing it.
+- DropboxSearchTool.py is used to start the tool. It runs the SearchMain, and will check to make sure that no unforeseen error will occur that might shut down the system. This is dirty, but was the quick solution to solving the problem at the time, and there have been no known issues since implementing it.
 - DropboxSearchTokens.txt store the Slack token on the first line, and then the Dropbox OAuth token on the second line. These are used so that this tool knows which Slack workspace to have the bot run on, and what Dropbox to search through. **It is important that these tokens stay secret to protect the confidentiality of the Dropbox.**
 - The .gitignore is a standard gitignore file, that also includes to ignore the DropboxSearchTokens.txt file, so that the tokens are not pushed to Github.

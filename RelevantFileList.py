@@ -39,6 +39,9 @@ class RelevantFileList:
         for entry in dbx.files_list_folder('',True).entries:
             if isinstance(entry, dropbox.files.FileMetadata):
 
+                if(entry.name.find('.') == -1):
+                    continue    # removes files that do not have an extension (such as drive files) that can mess up BagOfWords
+
                 path = entry.path_display.split('/')
 
                 path.pop(0) #removes empty first element
